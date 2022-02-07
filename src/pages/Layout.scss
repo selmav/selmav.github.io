@@ -1,0 +1,66 @@
+@import "../styles.scss";
+
+.navigation {
+    background-color: $white;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.75);
+    clip-path: inset(0px -15px 0px 0px);
+    z-index: 2;
+    padding-top: 80px;
+}
+
+.container-fluid {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.row-content {
+    flex-grow: 1;
+    background-color: $secondary;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-wrapper {
+    height: 6rem;
+    margin-left: auto;
+    max-width: 20rem;
+    width: 100%;
+}
+
+.icon {
+    width: 1.8rem;
+    height: 1.8rem;
+    margin-right: 1.25rem;
+}
+
+
+.links {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 11.5rem;
+    padding-left: 1.25rem;
+    position: sticky;
+    top: 5rem;
+
+    div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .activated {
+            text-decoration: underline;
+            text-underline-offset: 6px;
+            cursor: pointer;
+        }
+
+        h4 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+    }
+}

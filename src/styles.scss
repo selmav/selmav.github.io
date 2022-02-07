@@ -1,0 +1,135 @@
+@import "~bootstrap/scss/bootstrap";
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@1,300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@1,300&family=Nunito:ital,wght@0,700;1,400&display=swap");
+
+$primary: #e65100;
+$secondary: #5d4037;
+$white: #ffffff;
+$hover: #d84315;
+$disabled: #7a7a7a;
+
+$primary-font: "Merriweather", serif;
+$secondary-font: "Nunito", sans-serif;
+
+@mixin mobile {
+    @media (max-width: 767px) {
+        @content;
+    }
+}
+
+.primary-font {
+    font-family: $primary-font;
+    font-size: 1rem;
+    color: $white;
+
+    &--contrast {
+        color: $secondary;
+    }
+
+    &--error {
+        color: $primary;
+    }
+
+    &--bold {
+        font-weight: 600;
+    }
+}
+
+.secondary-font {
+    font-family: $secondary-font;
+    font-size: 1rem;
+    color: $white;
+    font-weight: 600;
+
+    &--contrast {
+        color: $secondary;
+    }
+
+    &--light {
+        font-weight: 400;
+        font-style: italic;
+    }
+}
+
+.link {
+    &:hover {
+        text-decoration: underline;
+        text-underline-offset: 6px;
+        cursor: pointer;
+    }
+}
+
+.button-common {
+    background-color: $primary;
+    color: $white;
+    font-size: 1.8rem;
+    border: 0;
+    border-radius: 1.4rem;
+    text-transform: uppercase;
+    font-family: $secondary-font;
+    padding: 0 1.4rem;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        background-color: $hover;
+    }
+
+    &:focus-visible {
+        outline: none;
+    }
+
+    &--disabled {
+        background-color: $disabled;
+        &:hover {
+            background-color: $disabled;
+        }
+    }
+}
+
+.button-secondary {
+    background-color: $white;
+    color: $secondary;
+    font-size: 1.8rem;
+    border: 2px solid $secondary;
+    border-radius: 1.5rem;
+    border: 2px solid $secondary;
+    text-transform: uppercase;
+    font-family: $secondary-font;
+    padding: 0 1.5rem;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        background-color: $secondary;
+        color: $white;
+    }
+}
+
+p {
+    margin-top: 0.8rem;
+}
+
+.form-control {
+    height: 50px;
+    font-family: $primary-font;
+    border-radius: 20px;
+
+    &:focus {
+        border-color: rgba($color: $primary, $alpha: 0.5);
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba($color: $primary, $alpha: 0.5);
+    }
+}
+
+.modal-holder {
+    animation-name: example;
+    animation-duration: 0.3s;
+}
+
+@keyframes example {
+    0% {
+        transform: scale(0.5);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

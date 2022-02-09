@@ -1,6 +1,6 @@
 import { Observable, of } from "rxjs";
-import { Recipe } from "../models/Recipe.model";
-
+import { Category, Recipe } from "../models/Recipe.model";
+import { searchResults } from "../models/Search.mock";
 
 
 export function GetPopular(): Observable<Recipe[]> {
@@ -9,7 +9,8 @@ export function GetPopular(): Observable<Recipe[]> {
             name: 'Sicilijanska pizza',
             time: '30m',
             likes: 122,
-            imageUrl: 'https://gdsit.cdn-immedia.net/2014/10/Pizza.jpg'
+            imageUrl: 'https://gdsit.cdn-immedia.net/2014/10/Pizza.jpg',
+            description: 'this is desc'
         },
         {
             time: '30m',
@@ -24,4 +25,17 @@ export function GetPopular(): Observable<Recipe[]> {
             imageUrl: 'https://static.fanpage.it/wp-content/uploads/sites/22/2020/11/Cream-of-Asparagus-Soup-9-1200x1200.jpg'
         }
     ])
+}
+
+export function SearchRecipes(name: string, filters: Category[]): Recipe[] {
+    let results: Recipe[] = [];
+    if (!!name && name !== '') {
+        results = [...searchResults].filter(r => r.name.toLowerCase().includes(name.toLocaleLowerCase()));
+    }
+
+    if (!!filters && filters.length) {
+        results = (results.length ? results : [...searchResults]).filter(r => r.category && filters.includes(r.category));
+    }
+
+    return results;
 }

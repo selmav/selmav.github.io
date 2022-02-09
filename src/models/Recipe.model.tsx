@@ -26,9 +26,10 @@ export interface UserComment {
 }
 
 export enum Category {
-    Soup = 'a1',
-    Appetizer = 'a2',
-    Main = 'a3',
-    Desert = 'a4',
-    Other = 'a5'
+    Soup = 'Supe',
+    Appetizer = 'Predjela',
+    Main = 'Glavna jela',
+    Desert = 'Desert',
+    Other = 'Ostalo'
 }
+

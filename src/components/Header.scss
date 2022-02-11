@@ -7,3 +7,16 @@
     height: 100%;
     width: 100%;
 }
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    height: 250px;
+}
+
+.modal-form-row {
+    display: flex;
+    flex-direction: column;
+}

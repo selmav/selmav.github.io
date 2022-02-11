@@ -18,6 +18,10 @@ function Landing() {
         }).unsubscribe();
     }, []);
 
+    function onSearch() {
+        navigate('/main/search', { state: getValues('search') });
+    }
+
     return (
         <div className="container-fluid bg-color">
             {/* landing main */}
@@ -36,7 +40,7 @@ function Landing() {
                                 <div style={{ position: 'relative' }}>
                                     <input className='form-control' placeholder='Unesite pojam pretrage...'
                                         {...register('search')}></input>
-                                    <img className="i-search" onClick={() => navigate('/main')} src="search.png" />
+                                    <img className="i-search" onClick={onSearch} src="search.png" />
                                 </div>
                             </div>
 

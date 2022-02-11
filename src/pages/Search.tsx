@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useLocation } from 'react-router-dom';
 import Card from '../components/Card';
 import Filter from '../components/Filter';
 import { Category, Recipe } from '../models/Recipe.model';
@@ -11,18 +12,25 @@ function Search() {
     const [isSearched, setIsSearched] = useState(false);
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     const [isSearchValid, setIsSearchValid] = useState(true);
-    const { register, formState: { errors, touchedFields }, getValues } = useForm<{ search: string }>({ mode: 'onBlur' });
+    const { register, formState: { errors, touchedFields }, getValues, setValue } = useForm<{ search: string }>({ mode: 'onBlur' });
+    const { state } = useLocation();
+    const filters = Object.keys(Category).map(key => ({ value: key, name: (Category as any)[key] }))
 
-    function onSearch() {
-        setIsSearched(true);
-        setRecipes(SearchRecipes(getValues('search'), selectedFilters.map(f => (Category as any)[f])));
-    }
+    useEffect(() => {
+        if (state) {
+            setValue('search', state as string, { shouldTouch: true });
+            onSearch();
+        }
+    }, []);
 
     useEffect(() => {
         setIsSearchValid(!!touchedFields.search && (!errors.search || selectedFilters.length > 0));
     }, [touchedFields, errors.search, selectedFilters]);
 
-    const filters = Object.keys(Category).map(key => ({ value: key, name: (Category as any)[key] }))
+    function onSearch() {
+        setIsSearched(true);
+        setRecipes(SearchRecipes(getValues('search'), selectedFilters.map(f => (Category as any)[f])));
+    }
 
     return (
         <div className="row h-100">

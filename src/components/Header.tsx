@@ -1,7 +1,7 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import './Header.scss';
-import Popup from './Popup';
+import Popup, { PopupProps } from './Popup';
 
 interface LoginRequest {
     username: string;
@@ -10,14 +10,21 @@ interface LoginRequest {
 
 function Header() {
     const [modalShow, setModalShow] = useState(false);
-    const [popupBody, setPopupBody] = useState<ReactElement | undefined>(undefined);
+    const [isLogin, setIsLogin] = useState(false);
+    const [popupProps, setPopupProps] = useState<PopupProps>({});
     const { register, formState: { touchedFields, errors }, getValues, reset } = useForm<LoginRequest>({ mode: 'onBlur' });
 
     useEffect(() => {
-        setPopupBody(loginBody());
-    }, [touchedFields?.username, touchedFields?.password, errors?.username, errors?.password]);
+        const formValid = isLogin ?
+            ((touchedFields?.username && !errors?.username) && (touchedFields?.password && !errors?.password)) :
+            true;
+        setProps(!!formValid);
+    }, [isLogin, touchedFields?.username, touchedFields?.password, errors?.username, errors?.password]);
+
+    const loginHeader = <h3 className="secondary-font secondary-font--contrast">Prijava</h3>
 
     function loginBody() {
+        // todo: move this to separate component (LoginForm)?
         return (<form className="modal-form">
             <div className="modal-form-row">
                 <h5 className="secondary-font secondary-font--contrast">Korisničko ime</h5>
@@ -35,10 +42,39 @@ function Header() {
         </form>);
     }
 
+    function loginFooter(formValid: boolean) {
+        return (
+            <div className="modal-footer">
+                <button type="button" className="button-secondary" onClick={() => setModalShow(false)}>Otkaži</button>
+                <button type="button" className={`button-common ${!formValid ? 'button-common--disabled' : ''}`}
+                    onClick={() => setModalShow(false)} disabled={!formValid}>
+                    Prijavi se
+                </button>
+            </div>
+        );
+    }
+
+    function registrationBody() {
+        return (
+            <p>registration</p>
+        )
+    }
+
     function handlePopup(isLogin: boolean = true) {
         reset();
-        setPopupBody(isLogin ? loginBody() : undefined);
+        setIsLogin(isLogin);
         setModalShow(true);
+    }
+
+    function setProps(formValid: boolean) {
+        const props: PopupProps = isLogin ? {
+            header: loginHeader,
+            body: loginBody(),
+            footer: loginFooter(formValid)
+        } : {
+            body: registrationBody()
+        };
+        setPopupProps(props);
     }
 
     return (
@@ -48,7 +84,7 @@ function Header() {
                 <h5 className="link" onClick={() => handlePopup(false)}>Registracija</h5>
             </div>
 
-            <Popup show={modalShow} onHide={() => setModalShow(false)} body={popupBody} />
+            <Popup show={modalShow} onHide={() => setModalShow(false)} {...popupProps} />
         </>
     );
 }

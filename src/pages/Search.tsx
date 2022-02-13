@@ -7,6 +7,8 @@ import { Category, Recipe } from '../models/Recipe.model';
 import { SearchRecipes } from '../services/Recipe.service';
 import './Search.scss';
 
+// todo: redux - preserve search state
+
 function Search() {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [isSearched, setIsSearched] = useState(false);

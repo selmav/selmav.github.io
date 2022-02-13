@@ -12,6 +12,7 @@ function Landing() {
     const { register, getValues } = useForm({ mode: 'onBlur' });
     const navigate = useNavigate();
 
+    // todo: redux?
     useEffect(() => {
         return GetPopular().subscribe(r => {
             setPopular(r);
@@ -19,6 +20,7 @@ function Landing() {
     }, []);
 
     function onSearch() {
+        // todo: redux?
         navigate('/main/search', { state: getValues('search') });
     }
 

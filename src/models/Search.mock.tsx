@@ -2,6 +2,7 @@ import { Category, Recipe } from "./Recipe.model";
 
 export const searchResults: Recipe[] = [
     {
+        id: 1,
         name: "Krem supa od cvjetače i brokule",
         time: "40m",
         likes: 755,
@@ -56,6 +57,7 @@ export const searchResults: Recipe[] = [
         category: Category.Soup
     },
     {
+        id: 2,
         name: "Zapečena pasta",
         time: "30m",
         likes: 65,
@@ -106,6 +108,7 @@ export const searchResults: Recipe[] = [
         category: Category.Main
     },
     {
+        id: 3,
         name: "Pasta s tunom",
         time: "25m",
         likes: 65,
@@ -162,6 +165,7 @@ export const searchResults: Recipe[] = [
         category: Category.Main
     },
     {
+        id: 4,
         name: "Pasta s bosiljkom",
         time: "30m",
         likes: 318,
@@ -211,6 +215,7 @@ export const searchResults: Recipe[] = [
         category: Category.Main
     },
     {
+        id: 5,
         name: "Pasta (Fusilli Vesuvio)",
         time: "25m",
         likes: 318,
@@ -260,6 +265,7 @@ export const searchResults: Recipe[] = [
         category: Category.Main
     },
     {
+        id: 6,
         name: "Pasta Tagliatelle s kozicama",
         time: "20m",
         likes: 80,
@@ -313,6 +319,7 @@ export const searchResults: Recipe[] = [
         category: Category.Main
     },
     {
+        id: 7,
         name: "Pasta Tagliatelle s povrćem",
         time: "50m",
         likes: 270,
@@ -368,6 +375,7 @@ export const searchResults: Recipe[] = [
         category: Category.Main
     },
     {
+        id: 8,
         name: "Pasta Carbonara",
         time: "30m",
         likes: 69,
@@ -409,6 +417,7 @@ export const searchResults: Recipe[] = [
         category: Category.Main
     },
     {
+        id: 9,
         name: "Pasta & Broccoli",
         time: "35m",
         likes: 34,
@@ -449,6 +458,7 @@ export const searchResults: Recipe[] = [
         category: Category.Main
     },
     {
+        id: 10,
         name: "Mediteranska pasta",
         time: "20m",
         likes: 102,
@@ -500,6 +510,7 @@ export const searchResults: Recipe[] = [
         category: Category.Main
     },
     {
+        id: 11,
         name: "Zucchini pasta",
         time: "25m",
         likes: 85,

@@ -1,11 +1,14 @@
 import SmallDetails from "./SmallDetails";
 import './Card.scss';
 import { Recipe } from "../models/Recipe.model";
+import { useNavigate } from "react-router-dom";
 
 function Card(recipe: Recipe) {
+    const navigate = useNavigate();
+
     return (
         recipe &&
-        <div className="recipe-wrapper">
+        <div className="recipe-wrapper" onClick={() => navigate(`/main/recipe/${recipe.id}`)}>
             <img src={recipe.imageUrl} alt="Slika recepta" />
 
             <div className="details-wrapper">

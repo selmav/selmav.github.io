@@ -39,3 +39,7 @@ export function SearchRecipes(name: string, filters: Category[]): Recipe[] {
 
     return results;
 }
+
+export function GetRecipeById(id: string | undefined): Recipe | undefined {
+    return searchResults.find(r => r.id === Number(id ?? 0));
+}

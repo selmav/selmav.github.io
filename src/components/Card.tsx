@@ -8,7 +8,7 @@ function Card(recipe: Recipe) {
 
     return (
         recipe &&
-        <div className="recipe-wrapper" onClick={() => navigate(`/main/recipe/${recipe.id}`)}>
+        <div className="recipe-wrapper" onClick={() => navigate(`/main/recipe/${recipe.id}`, { state: recipe })}> {/*todo: redux*/}
             <img src={recipe.imageUrl} alt="Slika recepta" />
 
             <div className="details-wrapper">

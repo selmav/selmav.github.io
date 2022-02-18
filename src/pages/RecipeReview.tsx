@@ -46,7 +46,7 @@ function RecipeReview() {
 
                 {/* opis */}
                 <div className="row">
-                    <div className="col-md-12 steps-wrapper">
+                    <div className="col-md-12 white-wrapper">
                         <h5 className="secondary-font secondary-font--contrast mb-3">PRIPREMA</h5>
                         <div className="mb-4">
                             {recipe.steps?.sort((a, b) => a.priority < b.priority ? -1 : 0).map((step, i) =>
@@ -66,24 +66,35 @@ function RecipeReview() {
 
                 {/* komentari */}
                 {
-                    isLoggedIn &&
-                    <div className="row">
+                    (recipe.comments && recipe.comments.length || isLoggedIn) &&
+                    <div className="row mt-5">
                         <div className="col-md-12">
-                            <div className="d-flex flex-row justify-content-between">
-                                {recipe.comments && recipe.comments.length && <h5 className="secondary-font">KOMENTARI</h5>}
+                            <div className="d-flex flex-row justify-content-between mb-4">
+                                {recipe?.comments?.length && <h5 className="secondary-font">KOMENTARI</h5>}
                                 <div className="d-flex flex-row justify-content-between flex-1">
                                     <div className="small-details" style={{ marginRight: '2rem' }}>
+                                        <img className="icon" src="/comment.png" />
                                         <p className="secondary-font secondary-font--contrast">Komentariši</p>
                                     </div>
 
                                     <div className="small-details">
+                                        <img className="icon" src="/heart.png" />
                                         <p className="secondary-font secondary-font--contrast">Sviđa mi se</p>
                                     </div>
                                 </div>
                             </div>
+
+                            {recipe?.comments?.length &&
+                                recipe.comments.map(comm =>
+                                    <div className="white-wrapper comment mb-4">
+
+                                        <h5 className="secondary-font secondary-font--contrast mb-2">{comm.username}</h5>
+                                        <p className="secondary-font secondary-font--contrast">{comm.comment}</p>
+
+                                    </div>)
+                            }
                         </div>
-                    </div>
-                }
+                    </div>}
             </div>}
         </div >
     );

@@ -5,6 +5,10 @@
         font-size: 1.7rem;
     }
 
+    p {
+        margin: 0;
+    }
+
     .details-wrapper {
         h2 {
             font-size: 2.5rem;
@@ -23,9 +27,14 @@
         background-color: $white;
         padding: 0.5rem;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
         border-radius: 1.5rem;
+
+        .icon {
+            margin-right: 0.7rem;
+        }
     }
 
     .recipe-image {
@@ -33,9 +42,19 @@
         border-radius: 2rem;
     }
 
-    .steps-wrapper {
+    .white-wrapper {
         background-color: $white;
         border-radius: 2rem;
         padding: 2rem;
+    }
+
+    .comment {
+        padding: 1rem 2rem;
+
+        h5 {
+            font-size: 1.2rem;
+            text-decoration: underline;
+            text-underline-offset: 5px;
+        }
     }
 }

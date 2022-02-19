@@ -7,6 +7,7 @@ import './Filter.scss';
 interface FilterProps {
     getValues: Function;
     filters: FilterValue[];
+    isLeft?: boolean;
 }
 
 function Filter(props: FilterProps) {
@@ -38,7 +39,7 @@ function Filter(props: FilterProps) {
 
             {
                 isExpanded &&
-                <div className="expanded">
+                <div className={`expanded ${props.isLeft ? 'expanded--left' : ''}`}>
                     <h5 className="primary-font primary-font--contrast">Kategorije:</h5>
 
                     {props.filters.map((c, i) =>

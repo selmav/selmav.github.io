@@ -1,4 +1,4 @@
-import { Category, Recipe } from "./Recipe.model";
+import { Category, IngredientClasses, Recipe } from "./Recipe.model";
 
 export const searchResults: Recipe[] = [
     {
@@ -20,6 +20,18 @@ export const searchResults: Recipe[] = [
             '2 dl mlijeka',
             '3 žlice - vrhom pune brašna'
         ],
+        ingredientClasses: {
+            main: [
+                { id: 5, name: 'Vegeta' }, { id: 6, name: 'Sol' },
+                { id: 7, name: 'Biber' }, { id: 8, name: 'Jaje' },
+                { id: 9, name: 'Ulje' }, { id: 10, name: 'Mlijeko' },
+                { id: 11, name: 'Brašno' }
+            ],
+            vegetables: [
+                { id: 1, name: 'Cvjetača' }, { id: 2, name: 'Brokula' },
+                { id: 3, name: 'Celer' }, { id: 4, name: 'Mrkva' }
+            ]
+        },
         steps: [
             {
                 priority: 1,
@@ -69,8 +81,12 @@ export const searchResults: Recipe[] = [
             "Žlica krušnih mrvica",
             "Sol",
             "Papar",
-            "Bosiljak"
+            "Bosiljak",
+            "Pasta"
         ],
+        ingredientClasses: {
+            main: [{ id: 12, name: 'Pasta' }, { id: 6, name: 'Sol' }, { id: 7, name: 'Biber' }, { id: 13, name: 'Parmezan' }]
+        },
         steps: [
             {
                 priority: 1,
@@ -124,6 +140,10 @@ export const searchResults: Recipe[] = [
             "2 jušne žlice parmezana",
             "malo peršina"
         ],
+        ingredientClasses: {
+            main: [{ id: 12, name: 'Tjestenina' }, { id: 14, name: 'Tuna' }, { id: 13, name: 'Parmezan' }, { id: 16, name: 'Vrhnje za kuhanje' }],
+            vegetables: [{ id: 15, name: 'Luk' }, { id: 18, name: 'Češnjak' }]
+        },
         steps: [
             {
                 priority: 1,
@@ -186,6 +206,15 @@ export const searchResults: Recipe[] = [
             "200 g očišćenog graška",
             "1 žličica Vegete"
         ],
+        ingredientClasses: {
+            main: [
+                { id: 12, name: 'Tjestenina' }, { id: 16, name: 'Vrhnje za kuhanje' },
+                { id: 5, name: 'Vegeta' }, { id: 7, name: 'Biber' }, { id: 6, name: 'Sol' },
+                { id: 13, name: 'Parmezan' }, { id: 19, name: 'Maslinovo ulje' }
+            ],
+            vegetables: [{ id: 18, name: 'Češnjak' }, { id: 20, name: 'Grašak' }],
+            fruit: [{ id: 17, name: 'Limun' }]
+        },
         steps: [
             {
                 priority: 1,
@@ -232,6 +261,10 @@ export const searchResults: Recipe[] = [
             "125 g mozzarelle isecene na kockice",
             "20 g parmesan, so"
         ],
+        ingredientClasses: {
+            main: [{ id: 19, name: 'Maslinovo ulje' }, { id: 12, name: 'Tjestenina' }, { id: 22, name: 'Mocarela sir' }, { id: 13, name: 'Parmezan' }, { id: 6, name: 'Sol' }],
+            vegetables: [{ id: 15, name: 'Luk' }, { id: 21, name: 'Paradajiz' }]
+        },
         steps: [
             {
                 priority: 1,
@@ -282,6 +315,10 @@ export const searchResults: Recipe[] = [
             "bijelo vino",
             "vrhnje za kuhanje"
         ],
+        ingredientClasses: {
+            main: [{ id: 12, name: 'Tjestenina' }, { id: 19, name: 'Maslinovo ulje' }, { id: 16, name: 'Vrhnje za kuhanje' }],
+            vegetables: [{ id: 18, name: 'Češnjak' },]
+        },
         steps: [
             {
                 priority: 1,
@@ -338,6 +375,10 @@ export const searchResults: Recipe[] = [
             "200 ml slatkog vrhnja",
             "300 g Valjanih rezanaca s jajima Zlato polje"
         ],
+        ingredientClasses: {
+            main: [{ id: 9, name: 'Ulje' }, { id: 25, name: 'Šampinjoni' }, { id: 16, name: 'Vrhnje za kuhanje' }, { id: 12, name: 'Tjestenina' }],
+            vegetables: [{ id: 15, name: 'Luk' }, { id: 18, name: 'Češnjak' }, { id: 23, name: 'Paprika' }, { id: 24, name: 'Kelj' }]
+        },
         steps: [
             {
                 priority: 1,
@@ -559,4 +600,26 @@ export const searchResults: Recipe[] = [
         ],
         category: Category.Main
     }
-]
+];
+
+export const ingredientClasses: IngredientClasses = {
+    main: [
+        { id: 5, name: 'Vegeta' }, { id: 6, name: 'Sol' },
+        { id: 7, name: 'Biber' }, { id: 8, name: 'Jaje' },
+        { id: 9, name: 'Ulje' }, { id: 10, name: 'Mlijeko' },
+        { id: 11, name: 'Brašno' }, { id: 12, name: 'Tjestenina' },
+        { id: 13, name: 'Parmezan' }, { id: 14, name: 'Tuna' },
+        { id: 16, name: 'Vrhnje za kuhanje' }, { id: 19, name: 'Maslinovo ulje' },
+        { id: 22, name: 'Mocarela sir' }, { id: 25, name: 'Šampinjoni' }
+    ],
+    vegetables: [
+        { id: 1, name: 'Cvjetača' }, { id: 2, name: 'Brokula' },
+        { id: 3, name: 'Celer' }, { id: 4, name: 'Mrkva' },
+        { id: 15, name: 'Luk' }, { id: 18, name: 'Češnjak' },
+        { id: 20, name: 'Grašak' }, { id: 21, name: 'Paradajiz' },
+        { id: 23, name: 'Paprika' }, { id: 24, name: 'Kelj' }
+    ],
+    fruit: [
+        { id: 17, name: 'Limun' }
+    ]
+}

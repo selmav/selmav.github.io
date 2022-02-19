@@ -3,20 +3,31 @@ import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import Card from '../components/Card';
 import Filter from '../components/Filter';
+import IngredientAccordions from '../components/IngredientAccordions';
 import { Category, Recipe } from '../models/Recipe.model';
 import { SearchRecipes } from '../services/Recipe.service';
 import './Search.scss';
 
 // todo: redux - preserve search state
 
-function Search() {
+interface SearchProps {
+    ingredientSearch?: boolean;
+}
+
+function Search({ ingredientSearch }: SearchProps) {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [isSearched, setIsSearched] = useState(false);
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     const [isSearchValid, setIsSearchValid] = useState(true);
     const { register, formState: { errors, touchedFields }, getValues, setValue } = useForm<{ search: string }>({ mode: 'onBlur' });
     const { state } = useLocation();
-    const filters = Object.keys(Category).map(key => ({ value: key, name: (Category as any)[key] }))
+    const filters = Object.keys(Category).map(key => ({ value: key, name: (Category as any)[key] }));
+
+    const filtersAndButtonElement = <>
+        <Filter getValues={(values: string[]) => setSelectedFilters(values)} filters={filters} isLeft={ingredientSearch} />
+        <button type="button" className={`button-common ${isSearchValid ? '' : 'button-common--disabled'}`}
+            disabled={!isSearchValid} onClick={onSearch}>Pretraži</button>
+    </>
 
     useEffect(() => {
         if (state) {
@@ -38,16 +49,23 @@ function Search() {
         <div className="row h-100">
             <div className="col-md-10 offset-md-1 content-wrapper">
                 <div className="search-row">
-                    <h1 className="primary-font" style={{ fontSize: '2.5rem' }}>Šta se danas jede...?</h1>
-                    <div className="search-wrapper">
-                        <div style={{ position: 'relative', flexGrow: 1 }}>
-                            <input type="text" className='form-control' placeholder='Unesite pojam pretrage...'
-                                {...register('search', { required: true })} />
-                            <img className="i-search" src="/search.png" />
-                        </div>
-                        <Filter getValues={(values: string[]) => setSelectedFilters(values)} filters={filters} />
-                        <button type="button" className={`button-common ${isSearchValid ? '' : 'button-common--disabled'}`}
-                            disabled={!isSearchValid} onClick={onSearch}>Pretraži</button>
+                    <h1 className="primary-font" style={{ fontSize: '2.5rem' }}>
+                        {ingredientSearch ? 'Pronađi ideje po namirnicama koje imaš!' : 'Šta se danas jede...?'}
+                    </h1>
+                    <div className={ingredientSearch ? '' : 'search-wrapper'}>
+                        {ingredientSearch ?
+                            <IngredientAccordions/>
+                            :
+                            <div style={{ position: 'relative', flexGrow: 1 }}>
+                                <input type="text" className='form-control' placeholder='Unesite pojam pretrage...'
+                                    {...register('search', { required: true })} />
+                                <img className="i-search" src="/search.png" />
+                            </div>
+                        }
+
+                        {ingredientSearch ?
+                            <div className="ingredient-wrapper">{filtersAndButtonElement}</div>
+                            : filtersAndButtonElement}
                     </div>
                     {
                         touchedFields?.search && !isSearchValid &&
@@ -68,7 +86,7 @@ function Search() {
                     </div>
                 }
             </div>
-        </div>
+        </div >
     );
 };
 

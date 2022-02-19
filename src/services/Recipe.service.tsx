@@ -1,5 +1,5 @@
 import { Observable, of } from "rxjs";
-import { Category, Recipe } from "../models/Recipe.model";
+import { Category, IngredientClasses, Recipe } from "../models/Recipe.model";
 import { searchResults } from "../models/Search.mock";
 
 
@@ -42,4 +42,12 @@ export function SearchRecipes(name: string, filters: Category[]): Recipe[] {
 
 export function GetRecipeById(id: string | undefined): Recipe | undefined {
     return searchResults.find(r => r.id === Number(id ?? 0));
+}
+
+export function GetIngredientClasses(): IngredientClasses {
+    return {
+        main: [{ id: 1, name: 'osnovno' }],
+        vegetables: [{ id: 2, name: 'povrce' }],
+        fruit: [{ id: 3, name: 'voce' }]
+    }
 }

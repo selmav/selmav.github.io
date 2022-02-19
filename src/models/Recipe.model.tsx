@@ -7,6 +7,7 @@ export interface Recipe {
     description?: string;
     personCount?: number;
     ingredients?: string[];
+    ingredientClasses?: IngredientClasses;
     steps?: Step[];
     serving?: string;
     advice?: string;
@@ -33,3 +34,13 @@ export enum Category {
     Other = 'Ostalo'
 }
 
+export interface Ingredient {
+    id: number;
+    name: string;
+}
+
+export interface IngredientClasses {
+    main?: Ingredient[];
+    vegetables?: Ingredient[];
+    fruit?: Ingredient[];
+}

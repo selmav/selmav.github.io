@@ -10,7 +10,7 @@ function RecipeReviewGuard() {
   const params = useParams();
   return (!!params?.recipeId && Number(params.recipeId) > 0) ? <RecipeReview /> : <Navigate to="/main" />
 }
-  
+
 function App() {
   useEffect(() => { document.title = 'e-recepteka'; }, []);
   return (
@@ -18,10 +18,10 @@ function App() {
       <Route path="/" element={<Landing />} />
       <Route path="main" element={<Layout />}>
         <Route path="" element={<Navigate to="search" />} />
-        <Route path="search" element={<Search />} />
+        <Route path="search" element={<Search key="search"/>} />
+        <Route path="ingredients" element={<Search key="ingredients" ingredientSearch/>} />
         <Route path="recipe">
-
-          <Route path=":recipeId" element={<RecipeReviewGuard/>} />
+          <Route path=":recipeId" element={<RecipeReviewGuard />} />
         </Route>
       </Route>
     </Routes>

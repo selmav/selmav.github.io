@@ -51,7 +51,7 @@ function Landing() {
                                     <h3>Nemaš ideju?</h3> <br />
                                     <h3>Odaberi namirnice i pronađi savršen obrok!</h3>
                                 </div>
-                                <button type="button" className="button-common">{'>'}</button>
+                                <button type="button" className="button-common" onClick={() => navigate('/main/ingredients')}>{'>'}</button>
                             </div>
                         </div>
                     </div>

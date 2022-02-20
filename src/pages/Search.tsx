@@ -5,7 +5,7 @@ import Card from '../components/Card';
 import Filter from '../components/Filter';
 import IngredientAccordions from '../components/IngredientAccordions';
 import { Category, Recipe } from '../models/Recipe.model';
-import { SearchRecipes } from '../services/Recipe.service';
+import { SearchByIngredients, SearchRecipes } from '../services/Recipe.service';
 import './Search.scss';
 
 // todo: redux - preserve search state
@@ -18,6 +18,7 @@ function Search({ ingredientSearch }: SearchProps) {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [isSearched, setIsSearched] = useState(false);
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+    const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
     const [isSearchValid, setIsSearchValid] = useState(true);
     const { register, formState: { errors, touchedFields }, getValues, setValue } = useForm<{ search: string }>({ mode: 'onBlur' });
     const { state } = useLocation();
@@ -25,8 +26,13 @@ function Search({ ingredientSearch }: SearchProps) {
 
     const filtersAndButtonElement = <>
         <Filter getValues={(values: string[]) => setSelectedFilters(values)} filters={filters} isLeft={ingredientSearch} />
-        <button type="button" className={`button-common ${isSearchValid ? '' : 'button-common--disabled'}`}
-            disabled={!isSearchValid} onClick={onSearch}>Pretraži</button>
+        {
+            ingredientSearch ?
+                <button type="button" className={`button-common ${selectedFilters.length || selectedIngredients.length ? '' : 'button-common--disabled'}`}
+                    disabled={!selectedFilters.length && !selectedIngredients.length} onClick={onIngredientSearch}>Pretraži</button>
+                : <button type="button" className={`button-common ${isSearchValid ? '' : 'button-common--disabled'}`}
+                    disabled={!isSearchValid} onClick={onSearch}>Pretraži</button>
+        }
     </>
 
     useEffect(() => {
@@ -45,6 +51,11 @@ function Search({ ingredientSearch }: SearchProps) {
         setRecipes(SearchRecipes(getValues('search'), selectedFilters.map(f => (Category as any)[f])));
     }
 
+    function onIngredientSearch() {
+        setIsSearched(true);
+        setRecipes(SearchByIngredients(selectedIngredients.map(Number), selectedFilters.map(f => (Category as any)[f])));
+    }
+
     return (
         <div className="row h-100">
             <div className="col-md-10 offset-md-1 content-wrapper">
@@ -54,7 +65,7 @@ function Search({ ingredientSearch }: SearchProps) {
                     </h1>
                     <div className={ingredientSearch ? '' : 'search-wrapper'}>
                         {ingredientSearch ?
-                            <IngredientAccordions/>
+                            <IngredientAccordions selectClasses={(values: string[]) => setSelectedIngredients(values)} />
                             :
                             <div style={{ position: 'relative', flexGrow: 1 }}>
                                 <input type="text" className='form-control' placeholder='Unesite pojam pretrage...'

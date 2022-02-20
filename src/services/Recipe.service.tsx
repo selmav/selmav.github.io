@@ -1,6 +1,6 @@
 import { Observable, of } from "rxjs";
 import { Category, IngredientClasses, Recipe } from "../models/Recipe.model";
-import { searchResults } from "../models/Search.mock";
+import { ingredientClassesMock, searchResults } from "../models/Search.mock";
 
 
 export function GetPopular(): Observable<Recipe[]> {
@@ -29,12 +29,10 @@ export function GetPopular(): Observable<Recipe[]> {
 
 export function SearchRecipes(name: string, filters: Category[]): Recipe[] {
     let results: Recipe[] = [];
-    if (!!name && name !== '') {
-        results = [...searchResults].filter(r => r.name.toLowerCase().includes(name.toLocaleLowerCase()));
-    }
+    results = !!name && name !== '' ? [...searchResults].filter(r => r.name.toLowerCase().includes(name.toLocaleLowerCase())) : [...searchResults];
 
     if (!!filters && filters.length) {
-        results = (results.length ? results : [...searchResults]).filter(r => r.category && filters.includes(r.category));
+        results = results.filter(r => r.category && filters.includes(r.category));
     }
 
     return results;
@@ -46,8 +44,24 @@ export function GetRecipeById(id: string | undefined): Recipe | undefined {
 
 export function GetIngredientClasses(): IngredientClasses {
     return {
-        main: [{ id: 1, name: 'osnovno' }],
-        vegetables: [{ id: 2, name: 'povrce' }],
-        fruit: [{ id: 3, name: 'voce' }]
+        main: ingredientClassesMock.main?.sort((a, b) => a.name.localeCompare(b.name)),
+        vegetables: ingredientClassesMock.vegetables?.sort((a, b) => a.name.localeCompare(b.name)),
+        fruit: ingredientClassesMock.fruit?.sort((a, b) => a.name.localeCompare(b.name)),
+    };
+}
+
+export function SearchByIngredients(ingredients: number[], filters: Category[]): Recipe[] {
+    let results: Recipe[] = [];
+
+    // todo: refactor this !!
+    results = [...searchResults].filter(r => {
+        const classes = [...(r.ingredientClasses?.main?.map(c => c.id) || []), ...(r.ingredientClasses?.vegetables?.map(c => c.id) || []), ...(r.ingredientClasses?.fruit?.map(c => c.id) || [])];
+        return !!ingredients.filter(value => classes.includes(value)).length;
+    });
+
+    if (!!filters && filters.length) {
+        results = results.filter(r => r.category && filters.includes(r.category));
     }
+
+    return results;
 }

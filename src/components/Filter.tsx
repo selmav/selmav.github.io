@@ -29,7 +29,7 @@ function Filter(props: FilterProps) {
     }, [ref, isExpanded]);
 
     function onExpand() {
-        isExpanded && props.getValues(getValues('filter'));
+        isExpanded && props.getValues(getValues('filter')); // todo: redux
         setIsExpanded(!isExpanded);
     }
 

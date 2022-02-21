@@ -3,15 +3,33 @@ import { Link } from "react-router-dom";
 import Header from "../components/Header";
 import './Layout.scss';
 
+type NavigationLink = {
+    name: string,
+    url: string,
+    imageUrl: string,
+    requiresLogin?: boolean
+}
+
 function Layout() {
     const location = useLocation();
-    const navigationLinks = [
+    const navigationLinks: NavigationLink[] = [
         { name: 'Početna', url: '/', imageUrl: 'https://iconarchive.com/download/i96324/iconsmind/outline/Home-2-2.ico' },
         { name: 'Pretraga', url: '/main/search', imageUrl: '/search.png' },
-        { name: 'Namirnice', url: '/main/ingredients', imageUrl: 'https://iconarchive.com/download/i88133/icons8/ios7/Food-Vegetarian-Food.ico' }
+        { name: 'Namirnice', url: '/main/ingredients', imageUrl: 'https://iconarchive.com/download/i88133/icons8/ios7/Food-Vegetarian-Food.ico' },
+        { name: 'Moji recepti', url: '/main/recipe/my', imageUrl: 'https://cdn-icons-png.flaticon.com/128/768/768818.png', requiresLogin: true }
     ];
 
     const activatedRoute = location?.pathname;
+    const isLoggedIn = true;
+
+    const linkElement = (link: NavigationLink, i: number) => <div key={i}>
+        <img className="icon" src={link.imageUrl} />
+        <Link to={link.url}>
+            <h4 className={`primary-font primary-font--contrast link ${link.url === activatedRoute ? 'activated' : ''}`}>
+                {link.name}
+            </h4>
+        </Link>
+    </div>
 
     return (
         <div className="container-fluid">
@@ -19,14 +37,10 @@ function Layout() {
                 <div className="col-md-2 navigation">
                     <div className="links">
                         {navigationLinks.map((link, i) =>
-                            <div key={i}>
-                                <img className="icon" src={link.imageUrl} />
-                                <Link to={link.url}>
-                                    <h4 className={`primary-font primary-font--contrast link ${link.url === activatedRoute ? 'activated' : ''}`}>
-                                        {link.name}
-                                    </h4>
-                                </Link>
-                            </div>)}
+                            <>
+                                {(!link.requiresLogin && linkElement(link, i)) || (isLoggedIn && linkElement(link, i))}
+                            </>
+                        )}
                     </div>
                 </div>
 

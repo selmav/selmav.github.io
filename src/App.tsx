@@ -3,6 +3,7 @@ import { Navigate, Route, Routes, useParams } from 'react-router';
 import './App.scss';
 import Landing from './pages/Landing';
 import Layout from './pages/Layout';
+import RecipeList, { RecipeListType } from './pages/RecipeList';
 import RecipeReview from './pages/RecipeReview';
 import Search from './pages/Search';
 
@@ -22,6 +23,7 @@ function App() {
         <Route path="ingredients" element={<Search key="ingredients" ingredientSearch/>} />
         <Route path="recipe">
           <Route path=":recipeId" element={<RecipeReviewGuard />} />
+          <Route path="my" element={<RecipeList recipeListType={RecipeListType.saved}/>}/>
         </Route>
       </Route>
     </Routes>

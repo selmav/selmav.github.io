@@ -39,7 +39,7 @@ export interface Ingredient {
     name: string;
 }
 
-export interface IngredientClasses {
+export type IngredientClasses = {
     main?: Ingredient[];
     vegetables?: Ingredient[];
     fruit?: Ingredient[];

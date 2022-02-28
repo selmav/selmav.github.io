@@ -646,3 +646,9 @@ export const ingredientClassesMock: IngredientClasses = {
         { id: 17, name: 'Limun' }
     ]
 };
+
+export const myRecipes = [
+    searchResults[4],
+    searchResults[9],
+    searchResults[10]
+];

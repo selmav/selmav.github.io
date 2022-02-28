@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Navigate, Route, Routes, useParams } from 'react-router';
 import './App.scss';
+import AddRecipe from './pages/AddRecipe';
 import Landing from './pages/Landing';
 import Layout from './pages/Layout';
 import RecipeList, { RecipeListType } from './pages/RecipeList';
@@ -23,7 +24,9 @@ function App() {
         <Route path="ingredients" element={<Search key="ingredients" ingredientSearch/>} />
         <Route path="recipe">
           <Route path=":recipeId" element={<RecipeReviewGuard />} />
-          <Route path="my" element={<RecipeList recipeListType={RecipeListType.saved}/>}/>
+          <Route path="my" element={<RecipeList key={RecipeListType.my} recipeListType={RecipeListType.my}/>}/>
+          <Route path="saved" element={<RecipeList key={RecipeListType.saved} recipeListType={RecipeListType.saved}/>}/>
+          <Route path="add" element={<AddRecipe/>}/>
         </Route>
       </Route>
     </Routes>

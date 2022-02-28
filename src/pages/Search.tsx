@@ -63,7 +63,7 @@ function Search({ ingredientSearch }: SearchProps) {
                     <h1 className="primary-font" style={{ fontSize: '2.5rem' }}>
                         {ingredientSearch ? 'Pronađi ideje po namirnicama koje imaš!' : 'Šta se danas jede...?'}
                     </h1>
-                    <div className={ingredientSearch ? '' : 'search-wrapper'}>
+                    <div className={ingredientSearch ? '' : 'row-space-between'}>
                         {ingredientSearch ?
                             <IngredientAccordions selectClasses={(values: string[]) => setSelectedIngredients(values)} />
                             :

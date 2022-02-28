@@ -23,13 +23,14 @@ function RecipeReview() {
                 <div className="row">
                     <div className={`details-wrapper col-md-${recipe.imageUrl !== '' ? '6' : '12'}`}>
                         <h2 className="primary-font">{recipe.name}</h2>
-                        <div className="d-flex flex-row justify-content-between align-items-center mt-4 mb-2">
+                        <div className="d-flex flex-column justify-content-between align-items-start mt-2 mb-2">
+                            <div className="small-details mb-4">
+                                <SmallDetails likes={recipe.likes} time={recipe.time} />
+                            </div>
+
                             <div>
                                 <h5 className="secondary-font">SASTOJCI</h5>
                                 <p className="secondary-font">Broj posluživanja: {recipe.personCount}</p>
-                            </div>
-                            <div className="small-details">
-                                <SmallDetails likes={recipe.likes} time={recipe.time} />
                             </div>
                         </div>
 
@@ -72,14 +73,14 @@ function RecipeReview() {
                             <div className="d-flex flex-row justify-content-between mb-4">
                                 {recipe?.comments?.length && <h5 className="secondary-font">KOMENTARI</h5>}
                                 <div className="d-flex flex-row justify-content-between flex-1">
-                                    <div className="small-details" style={{ marginRight: '2rem' }}>
+                                    <div className="small-details" style={{ marginRight: '2rem' }} role="button">
                                         <img className="icon" src="/comment.png" />
-                                        <p className="secondary-font secondary-font--contrast">Komentariši</p>
+                                        <p className="secondary-font secondary-font--contrast link">Komentariši</p>
                                     </div>
 
-                                    <div className="small-details">
+                                    <div className="small-details" role="button">
                                         <img className="icon" src="/heart.png" />
-                                        <p className="secondary-font secondary-font--contrast">Sviđa mi se</p>
+                                        <p className="secondary-font secondary-font--contrast link">Sviđa mi se</p>
                                     </div>
                                 </div>
                             </div>

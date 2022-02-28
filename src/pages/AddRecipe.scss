@@ -1,0 +1,28 @@
+@import "../styles.scss";
+
+.listing {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: stretch;
+    align-items: center;
+}
+
+.list-btn {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 10px;
+    background-color: $white;
+    margin-right: 1.5rem;
+    font-size: 1.7rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        background-color: $hover;
+        color: $white;
+    }
+}

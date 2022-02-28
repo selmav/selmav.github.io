@@ -62,7 +62,7 @@ function Landing() {
             <section className="row bg-color">
                 <div className="col-md-10 offset-md-1">
                     <div className="popular-wrapper">
-                        <h1 className="header-text primary-font">Popularni recepti</h1>
+                        <h1 className="primary-font">Popularni recepti</h1>
                         <div className="cards-wrapper">
                             {popular?.map((r: Recipe, i: number) => <PopularCard key={i} {...r} />)}
                         </div>

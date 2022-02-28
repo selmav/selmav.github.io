@@ -1,6 +1,6 @@
 import { Observable, of } from "rxjs";
 import { Category, IngredientClasses, Recipe } from "../models/Recipe.model";
-import { ingredientClassesMock, searchResults } from "../models/Search.mock";
+import { ingredientClassesMock, myRecipes, searchResults } from "../models/Search.mock";
 
 
 export function GetPopular(): Observable<Recipe[]> {
@@ -64,4 +64,8 @@ export function SearchByIngredients(ingredients: number[], filters: Category[]):
     }
 
     return results;
+}
+
+export function GetMyRecipes(): Recipe[] {
+    return [...myRecipes];
 }

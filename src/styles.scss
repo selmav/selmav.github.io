@@ -7,6 +7,7 @@ $secondary: #5d4037;
 $white: #ffffff;
 $hover: #d84315;
 $disabled: #7a7a7a;
+$remove: #ff4848;
 
 $primary-font: "Merriweather", serif;
 $secondary-font: "Nunito", sans-serif;
@@ -59,15 +60,16 @@ $secondary-font: "Nunito", sans-serif;
     }
 }
 
+// todo: merge button-common and button-secondary into one class with variations
 .button-common {
     background-color: $primary;
     color: $white;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     border: 0;
-    border-radius: 1.4rem;
+    border-radius: 1.5rem;
     text-transform: uppercase;
     font-family: $secondary-font;
-    padding: 0 1.4rem;
+    padding: 0.7rem 1.5rem;
     transition: all 0.3s ease-in-out;
 
     &:hover {
@@ -84,18 +86,21 @@ $secondary-font: "Nunito", sans-serif;
             background-color: $disabled;
         }
     }
+
+    &--remove {
+        background-color: $remove;
+    }
 }
 
 .button-secondary {
     background-color: $white;
     color: $secondary;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     border: 2px solid $secondary;
     border-radius: 1.5rem;
-    border: 2px solid $secondary;
     text-transform: uppercase;
     font-family: $secondary-font;
-    padding: 0 1.5rem;
+    padding: calc(0.7rem - 2px) 1.5rem;
     transition: all 0.3s ease-in-out;
 
     &:hover {

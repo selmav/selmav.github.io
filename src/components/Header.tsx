@@ -12,7 +12,7 @@ function Header() {
     const [modalShow, setModalShow] = useState(false);
     const [isLogin, setIsLogin] = useState(false);
     const [popupProps, setPopupProps] = useState<PopupProps>({});
-    const { register, formState: { touchedFields, errors }, getValues, reset } = useForm<LoginRequest>({ mode: 'onBlur' });
+    const { register, formState: { touchedFields, errors }, reset } = useForm<LoginRequest>({ mode: 'onBlur' });
 
     useEffect(() => {
         const formValid = isLogin ?

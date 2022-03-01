@@ -35,7 +35,7 @@ export enum Category {
 }
 
 export interface Ingredient {
-    id: number;
+    id?: number;
     name: string;
 }
 

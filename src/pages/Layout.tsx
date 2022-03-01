@@ -36,7 +36,7 @@ function Layout() {
     return (
         <div className="container-fluid">
             <div className="row row-content">
-                <div className="col-md-2 navigation">
+                <div className="col-md-3 navigation">
                     <div className="links">
                         {navigationLinks.map((link, i) =>
                             <div key={i}>

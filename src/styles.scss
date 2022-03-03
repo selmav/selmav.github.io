@@ -20,7 +20,6 @@ $secondary-font: "Nunito", sans-serif;
 
 .primary-font {
     font-family: $primary-font;
-    // font-size: 1rem;
     color: $white;
 
     &--contrast {
@@ -29,6 +28,7 @@ $secondary-font: "Nunito", sans-serif;
 
     &--error {
         color: $primary;
+        margin: 0;
     }
 
     &--bold {

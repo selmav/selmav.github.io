@@ -1,6 +1,6 @@
 import { Observable, of } from "rxjs";
-import { Category, IngredientClasses, Recipe } from "../models/Recipe.model";
-import { AddToSearchResults, ingredientClassesMock, searchResults } from "../models/Search.mock";
+import { Category, IngredientClasses, Recipe, UserComment } from "../models/Recipe.model";
+import { AddToSearchResults, ingredientClassesMock, likedRecipes, searchResults } from "../models/Search.mock";
 
 export const myRecipes = [
     searchResults[4],
@@ -43,10 +43,6 @@ export function SearchRecipes(name: string, filters: Category[]): Recipe[] {
     return results;
 }
 
-export function GetRecipeById(id: string | undefined): Recipe | undefined {
-    return searchResults.find(r => r.id === Number(id ?? 0));
-}
-
 export function GetIngredientClasses(): IngredientClasses {
     return {
         main: ingredientClassesMock.main?.sort((a, b) => a.name.localeCompare(b.name)),
@@ -77,7 +73,11 @@ export function GetMyRecipes(): Recipe[] {
 
 export function AddMyRecipe(recipe: Recipe) {
     // todo: redux ... 
-    recipe = {...recipe, id: searchResults.length };
+    recipe = { ...recipe, id: searchResults.length };
     myRecipes.push(recipe);
     AddToSearchResults(recipe);
+}
+
+export function GetLikedRecipes() {
+    return likedRecipes;
 }

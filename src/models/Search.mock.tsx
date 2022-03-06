@@ -1,4 +1,6 @@
-import { Category, IngredientClasses, Recipe } from "./Recipe.model";
+import { Category, IngredientClasses, Recipe, UserComment } from "./Recipe.model";
+
+export const likedRecipes: Recipe[] = [];
 
 export const searchResults: Recipe[] = [
     {
@@ -625,7 +627,7 @@ export const searchResults: Recipe[] = [
 
 export function AddToSearchResults(recipe: Recipe) {
     searchResults.push(recipe);
-} 
+}
 
 export const ingredientClassesMock: IngredientClasses = {
     main: [
@@ -650,3 +652,43 @@ export const ingredientClassesMock: IngredientClasses = {
         { id: 17, name: 'Limun' }
     ]
 };
+
+export function SetLikedRecipe(recipeId: number): boolean {
+    const recipe = searchResults.find(r => r.id === recipeId);
+    const index = likedRecipes.findIndex(r => r.id === recipeId);
+    if (!!recipe) {
+        if (index === -1) {
+            likedRecipes.push(recipe);
+            return true;
+        }
+
+        likedRecipes.splice(index, 1);
+    }
+
+    return false;
+}
+
+export function GetIsLiked(recipeId: number) {
+    return likedRecipes.findIndex(r => r.id === recipeId) > -1;
+}
+
+export function GetRecipeById(id: string | undefined): Recipe | undefined {
+    return [...searchResults].find(r => r.id === Number(id ?? 0));
+}
+
+export function AddComment(comment: UserComment, recipeId: number) {
+    let index = searchResults.findIndex(r => r.id === recipeId);
+    if (index > -1) {
+        searchResults[index].comments?.push(comment);
+    }
+
+    index = likedRecipes.findIndex(r => r.id === recipeId);
+    if (index > -1) {
+        likedRecipes[index].comments?.push(comment);
+    }
+
+    // index = myRecipes.findIndex(r => r.id === recipeId);
+    // if (index > -1) {
+    //     myRecipes[index].comments?.push(comment);
+    // }
+}

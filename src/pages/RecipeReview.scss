@@ -27,6 +27,12 @@
         .icon {
             margin-right: 0.7rem;
         }
+
+        &--clickable {
+            &:hover {
+                box-shadow: rgba(0, 0, 0, 0.5) 0px 5px 5px, rgba(0, 0, 0, 0.22) 0px 5px 5px;
+            }
+        }
     }
 
     .recipe-image {

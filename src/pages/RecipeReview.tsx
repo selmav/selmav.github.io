@@ -1,20 +1,38 @@
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
+import { BehaviorSubject, ReplaySubject } from "rxjs";
+import Like from "../components/Like";
+import RecipeComment from "../components/RecipeComment";
 import SmallDetails from "../components/SmallDetails";
 import Step from "../components/Step";
 import { Recipe } from "../models/Recipe.model";
-import { GetRecipeById } from "../services/Recipe.service";
+import { GetRecipeById } from "../models/Search.mock";
 import './RecipeReview.scss';
 
 function RecipeReview() {
     const params = useParams();
-    const { state } = useLocation(); // todo: redux
+    // const { state } = useLocation(); // todo: redux
     const [recipe, setRecipe] = useState<Recipe>();
     const isLoggedIn = true; // todo
+    const refreshRecipe$: ReplaySubject<void> = new ReplaySubject(1);
 
     useEffect(() => {
-        setRecipe(state as Recipe ?? GetRecipeById(params.recipeId))
+        setRecipe(GetRecipeById(params.recipeId));
     }, []);
+
+    // useEffect(() => {
+    //     const subsc = refreshRecipe$.subscribe(() => {
+    //         const recipe = ;
+    //         setRecipe(recipe);
+    //     });
+
+    //     return () => { subsc.unsubscribe() };
+    // }, [refreshRecipe$]);
+
+    function onAddComment() {
+        console.log(recipe?.comments);
+        // refreshRecipe$.next();
+    }
 
     return (
         <div className="row recipe-review align-items-center">
@@ -79,26 +97,20 @@ function RecipeReview() {
                             <div className="d-flex flex-row justify-content-between mb-4">
                                 {recipe?.comments?.length && <h5 className="secondary-font">KOMENTARI</h5>}
                                 <div className="d-flex flex-row justify-content-between flex-1">
-                                    <div className="small-details" style={{ marginRight: '2rem' }} role="button">
-                                        <img className="icon" src="/comment.png" />
-                                        <p className="secondary-font secondary-font--contrast link">Komentariši</p>
-                                    </div>
-
-                                    <div className="small-details" role="button">
-                                        <img className="icon" src="/heart.png" />
-                                        <p className="secondary-font secondary-font--contrast link">Sviđa mi se</p>
-                                    </div>
+                                    {!!recipe.id &&
+                                        <>
+                                            <RecipeComment recipeId={recipe.id} onAddComment={onAddComment} />
+                                            <Like recipeId={recipe.id} />
+                                        </>
+                                    }
                                 </div>
                             </div>
 
-                            {recipe?.comments?.length &&
-                                recipe.comments.map((comm, i) =>
-                                    <div className="white-wrapper comment mb-4" key={i}>
-
-                                        <h5 className="secondary-font secondary-font--contrast mb-2">{comm.username}</h5>
-                                        <p className="secondary-font secondary-font--contrast">{comm.comment}</p>
-
-                                    </div>)
+                            {recipe?.comments?.map((comm, i) =>
+                                <div className="white-wrapper comment mb-4" key={i}>
+                                    <h5 className="secondary-font secondary-font--contrast mb-2">{comm.username}</h5>
+                                    <p className="secondary-font secondary-font--contrast">{comm.comment}</p>
+                                </div>)
                             }
                         </div>
                     </div>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Card from "../components/Card";
 import { Recipe } from "../models/Recipe.model";
-import { GetMyRecipes } from "../services/Recipe.service";
+import { GetLikedRecipes, GetMyRecipes } from "../services/Recipe.service";
 import "./Search.scss";
 
 export enum RecipeListType {
@@ -19,7 +19,7 @@ function RecipeList(props: RecipeListProps) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        setRecipes(props.recipeListType === RecipeListType.my ? GetMyRecipes() : []);
+        setRecipes(props.recipeListType === RecipeListType.my ? GetMyRecipes() : GetLikedRecipes());
     }, []);
 
 

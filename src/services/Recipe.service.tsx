@@ -1,7 +1,12 @@
 import { Observable, of } from "rxjs";
 import { Category, IngredientClasses, Recipe } from "../models/Recipe.model";
-import { ingredientClassesMock, myRecipes, searchResults } from "../models/Search.mock";
+import { AddToSearchResults, ingredientClassesMock, searchResults } from "../models/Search.mock";
 
+export const myRecipes = [
+    searchResults[4],
+    searchResults[9],
+    searchResults[10]
+];
 
 export function GetPopular(): Observable<Recipe[]> {
     return of([
@@ -68,4 +73,11 @@ export function SearchByIngredients(ingredients: number[], filters: Category[]):
 
 export function GetMyRecipes(): Recipe[] {
     return [...myRecipes];
+}
+
+export function AddMyRecipe(recipe: Recipe) {
+    // todo: redux ... 
+    recipe = {...recipe, id: searchResults.length };
+    myRecipes.push(recipe);
+    AddToSearchResults(recipe);
 }

@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Ingredient, Step } from "../models/Recipe.model";
+import { Category, Ingredient, Recipe, Step } from "../models/Recipe.model";
 import "./AddRecipe.scss";
+import ImageUploading, { ImageListType } from "react-images-uploading";
+import { AddMyRecipe } from "../services/Recipe.service";
+import { Form } from "react-bootstrap";
 
 
 function AddRecipe() {
@@ -9,7 +12,9 @@ function AddRecipe() {
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [steps, setSteps] = useState<Step[]>([]);
     const [isDisabled, setIsDisabled] = useState(true);
-    const watchFields = watch(['name', 'hours', 'minutes', 'serving']);
+    const [images, setImages] = useState<ImageListType>([]);
+    const watchFields = watch(['name', 'hours', 'minutes', 'serving', 'category']);
+    const categoryList = Object.keys(Category).map(key => ({ value: key, name: (Category as any)[key] }));
 
     const errorMessage = 'Polje je obavezno.';
 
@@ -22,12 +27,10 @@ function AddRecipe() {
     }, [errors?.hours, errors?.minutes, errors?.serving]);
 
     function setDisabled() {
-        const hours = getValues('hours');
-        const minutes = getValues('minutes');
-        const name = getValues('name');
-
         const hasErrors = Object.keys(errors).length > 0;
-        const missingInfo = ingredients.length === 0 || steps.length === 0 || (hours === '' && minutes === '') || name === '';
+        const missingInfo = ingredients.length === 0 || steps.length === 0 ||
+            (getValues('hours') === '' && getValues('minutes') === '') ||
+            getValues('name') === '' || getValues('category') === '';
         setIsDisabled(!!(hasErrors || missingInfo));
     }
 
@@ -61,6 +64,37 @@ function AddRecipe() {
         setSteps(newArr);
     }
 
+    function onImageUpload(imageList: ImageListType) {
+        setImages(imageList);
+    }
+
+    function saveRecipe() {
+        const recipe: Recipe = {
+            name: getValues('name'),
+            time: getTime(),
+            imageUrl: images[0]?.dataURL !== undefined ? images[0].dataURL : '',
+            likes: 0,
+            description: getValues('description'),
+            personCount: getValues('serving'),
+            ingredients: ingredients.map(x => x.name),
+            steps,
+            serving: getValues('servingDesc'),
+            advice: getValues('advice'),
+            category: getValues('category') as Category
+        }
+
+        AddMyRecipe(recipe);
+    }
+
+    function getTime(): string {
+        const hours = getValues('hours');
+        const minutes = getValues('minutes');
+
+        let time = hours !== '' ? `${hours}h` : '';
+        time = minutes !== '' ? `${time} ${minutes}m` : time;
+        return time;
+    }
+
     return (
         <div className="row h-100">
             <div className="col-md-10 offset-md-1 content-wrapper">
@@ -71,6 +105,11 @@ function AddRecipe() {
                         touchedFields?.name && errors?.name &&
                         <p className="primary-font primary-font--error">{errorMessage}</p>
                     }
+                </div>
+
+                <div className="mt-5">
+                    <h3 className="secondary-font" >Kratak opis</h3>
+                    <input type="text" className="form-control" {...register('description')} />
                 </div>
 
                 <div className="mt-5">
@@ -115,6 +154,16 @@ function AddRecipe() {
                     }
                 </div>
 
+                <div className="mt-5">
+                    <h3 className="secondary-font" >Posluživanje</h3>
+                    <input type="text" className="form-control" {...register('servingDesc')} />
+                </div>
+
+                <div className="mt-5">
+                    <h3 className="secondary-font" >Savjet</h3>
+                    <input type="text" className="form-control" {...register('advice')} />
+                </div>
+
                 <div className="flex-row mt-5">
                     <div>
                         <h3 className="secondary-font">Vrijeme pripreme</h3>
@@ -127,10 +176,10 @@ function AddRecipe() {
                     </div>
                     <div className="time-wrapper flex-col">
                         <h5 className="secondary-font">sati:</h5>
-                        <input className="form-control" type="number" min={0} {...register('hours', { min: '0' })} />
+                        <input className="form-control" type="number" min={0} {...register('hours', { min: '0', max: 23 })} />
 
                         <h5 className="secondary-font">minute:</h5>
-                        <input className="form-control" type="number" min={0} {...register('minutes', { min: '0' })} />
+                        <input className="form-control" type="number" min={0} {...register('minutes', { min: '0', max: 59 })} />
                     </div>
                 </div>
 
@@ -145,20 +194,49 @@ function AddRecipe() {
                     <input className="form-control flex-col" type="number" min={1} {...register('serving', { min: 1 })} />
                 </div>
 
-
-                <div className="flex-row mt-5 mb-5">
-                    <div style={{ display: 'flex' }}>
-                        <label className="list-btn secondary-font secondary-font--contrast">
-                            + <input type="file" style={{ display: 'none' }} />
-                        </label>
-                        <h3 className="secondary-font">Odaberi sliku </h3>
+                <div className="flex-row mt-5">
+                    <div>
+                        <h3 className="secondary-font">Kategorija</h3>
+                        {
+                            touchedFields?.category && !getValues('category') &&
+                            <p className="primary-font primary-font--error">{errorMessage}</p>
+                        }
                     </div>
+                    <Form.Select className="form-control flex-col" {...register('category', { required: true })}>
+                        {!getValues('category') && <option value="">Odaberite kategoriju jela...</option>}
+                        {categoryList.map((c) =>
+                            <option value={c.name} key={c.value}>{c.name}</option>
+                        )}
+                    </Form.Select>
+                </div>
 
-                    <div className="flex-col">
-                        <button className="button-common button-common--remove">Obriši</button>
-                        <button className={`button-common ${isDisabled ? 'button-common--disabled' : ''}`}
-                            disabled={isDisabled}>Sačuvaj</button>
+                <div className="mt-5">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                        <div style={{ display: 'flex' }}>
+                            <ImageUploading
+                                value={images}
+                                onChange={onImageUpload}
+                            >
+                                {({ onImageUpload }) => {
+                                    return <p onClick={onImageUpload} className="list-btn secondary-font secondary-font--contrast">
+                                        +
+                                    </p>
+                                }}
+                            </ImageUploading>
+                            <h3 className="secondary-font">{images.length ? images[0].file?.name : 'Odaberi sliku'}</h3>
+                        </div>
+                        {!!images.length && <p className="secondary-font link" onClick={() => onImageUpload([])}>Ukloni sliku</p>}
                     </div>
+                    {
+                        !!images.length &&
+                        <img className="upload-image" src={images[0].dataURL} />
+                    }
+                </div>
+
+                <div className="buttons-row mt-5 mb-5">
+                    <button className="button-common button-common--remove">Obriši</button>
+                    <button className={`button-common ${isDisabled ? 'button-common--disabled' : ''}`}
+                        disabled={isDisabled} onClick={saveRecipe}>Sačuvaj</button>
                 </div>
 
             </div>

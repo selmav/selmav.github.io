@@ -51,11 +51,17 @@ function RecipeReview() {
                         <h5 className="secondary-font secondary-font--contrast mb-3">PRIPREMA</h5>
                         <div className="mb-4">
                             {recipe.steps?.sort((a, b) => a.priority < b.priority ? -1 : 0).map((step, i) =>
-                                <Step key={step.id} step={step} index={i} />)}
+                                <Step key={i} step={step} index={i} />
+                            )}
                         </div>
 
-                        <h5 className="secondary-font secondary-font--contrast mb-3">POSLUŽIVANJE</h5>
-                        <p className="secondary-font secondary-font--contrast mb-4">{recipe.serving}</p>
+                        {
+                            recipe.serving && recipe.serving !== '' &&
+                            <>
+                                <h5 className="secondary-font secondary-font--contrast mb-3">POSLUŽIVANJE</h5>
+                                <p className="secondary-font secondary-font--contrast mb-4">{recipe.serving}</p>
+                            </>
+                        }
 
                         {recipe.advice && recipe.advice !== '' &&
                             <>
@@ -86,8 +92,8 @@ function RecipeReview() {
                             </div>
 
                             {recipe?.comments?.length &&
-                                recipe.comments.map(comm =>
-                                    <div className="white-wrapper comment mb-4">
+                                recipe.comments.map((comm, i) =>
+                                    <div className="white-wrapper comment mb-4" key={i}>
 
                                         <h5 className="secondary-font secondary-font--contrast mb-2">{comm.username}</h5>
                                         <p className="secondary-font secondary-font--contrast">{comm.comment}</p>
@@ -95,7 +101,8 @@ function RecipeReview() {
                                     </div>)
                             }
                         </div>
-                    </div>}
+                    </div>
+                }
             </div>}
         </div >
     );

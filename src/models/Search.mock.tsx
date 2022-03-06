@@ -623,6 +623,10 @@ export const searchResults: Recipe[] = [
     }
 ];
 
+export function AddToSearchResults(recipe: Recipe) {
+    searchResults.push(recipe);
+} 
+
 export const ingredientClassesMock: IngredientClasses = {
     main: [
         { id: 5, name: 'Vegeta' }, { id: 6, name: 'Sol' },
@@ -646,9 +650,3 @@ export const ingredientClassesMock: IngredientClasses = {
         { id: 17, name: 'Limun' }
     ]
 };
-
-export const myRecipes = [
-    searchResults[4],
-    searchResults[9],
-    searchResults[10]
-];

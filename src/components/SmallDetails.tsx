@@ -11,7 +11,7 @@ function SmallDetails({ time, likes }: { time: string, likes: number }) {
             }
 
             {
-                likes &&
+                !!likes &&
                 <>
                     <img className="icon" src="https://iconarchive.com/download/i66645/designbolts/free-valentine-heart/Heart.ico" />
                     <h4 className="primary-font primary-font--contrast">{likes}</h4>

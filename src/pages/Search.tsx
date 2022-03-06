@@ -43,7 +43,7 @@ function Search({ ingredientSearch }: SearchProps) {
     }, []);
 
     useEffect(() => {
-        setIsSearchValid(!!touchedFields.search && (!errors.search || selectedFilters.length > 0));
+        setIsSearchValid((!!touchedFields.search && !errors.search) || selectedFilters.length > 0);
     }, [touchedFields, errors.search, selectedFilters]);
 
     function onSearch() {

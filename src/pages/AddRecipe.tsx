@@ -5,10 +5,13 @@ import "./AddRecipe.scss";
 import ImageUploading, { ImageListType } from "react-images-uploading";
 import { AddMyRecipe } from "../services/Recipe.service";
 import { Form } from "react-bootstrap";
+import { toast, Slide } from "react-toastify";
+import { useNavigate } from "react-router";
 
 
 function AddRecipe() {
     const { register, formState: { errors, touchedFields }, watch, getValues, setValue } = useForm({ mode: 'onBlur' });
+    const navigate = useNavigate();
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [steps, setSteps] = useState<Step[]>([]);
     const [isDisabled, setIsDisabled] = useState(true);
@@ -84,6 +87,18 @@ function AddRecipe() {
         }
 
         AddMyRecipe(recipe);
+        toast.success('Recept je sačuvan!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'colored',
+            transition: Slide
+        });
+        navigate('/main/recipe/my');
     }
 
     function getTime(): string {

@@ -658,10 +658,12 @@ export function SetLikedRecipe(recipeId: number): boolean {
     const index = likedRecipes.findIndex(r => r.id === recipeId);
     if (!!recipe) {
         if (index === -1) {
+            recipe.likes++;
             likedRecipes.push(recipe);
             return true;
         }
 
+        recipe.likes--;
         likedRecipes.splice(index, 1);
     }
 
@@ -682,10 +684,10 @@ export function AddComment(comment: UserComment, recipeId: number) {
         searchResults[index].comments?.push(comment);
     }
 
-    index = likedRecipes.findIndex(r => r.id === recipeId);
-    if (index > -1) {
-        likedRecipes[index].comments?.push(comment);
-    }
+    // index = likedRecipes.findIndex(r => r.id === recipeId);
+    // if (index > -1) {
+    //     likedRecipes[index].comments?.push(comment);
+    // }
 
     // index = myRecipes.findIndex(r => r.id === recipeId);
     // if (index > -1) {

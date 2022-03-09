@@ -26,7 +26,7 @@ function RecipeComment({ recipeId, onAddComment }: { recipeId: number, onAddComm
                 comment: commentText
             }
             AddComment(comment, recipeId);
-            onAddComment();
+            onAddComment(comment);
             setValue('comment', '');
         }
         setModalShow(false);

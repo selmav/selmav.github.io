@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router";
-import { BehaviorSubject, ReplaySubject } from "rxjs";
+import { useParams } from "react-router";
 import Like from "../components/Like";
 import RecipeComment from "../components/RecipeComment";
 import SmallDetails from "../components/SmallDetails";
@@ -11,27 +10,15 @@ import './RecipeReview.scss';
 
 function RecipeReview() {
     const params = useParams();
-    // const { state } = useLocation(); // todo: redux
     const [recipe, setRecipe] = useState<Recipe>();
     const isLoggedIn = true; // todo
-    const refreshRecipe$: ReplaySubject<void> = new ReplaySubject(1);
 
     useEffect(() => {
         setRecipe(GetRecipeById(params.recipeId));
     }, []);
 
-    // useEffect(() => {
-    //     const subsc = refreshRecipe$.subscribe(() => {
-    //         const recipe = ;
-    //         setRecipe(recipe);
-    //     });
-
-    //     return () => { subsc.unsubscribe() };
-    // }, [refreshRecipe$]);
-
-    function onAddComment() {
-        console.log(recipe?.comments);
-        // refreshRecipe$.next();
+    function onAction() {
+        setRecipe({ ...recipe } as Recipe);
     }
 
     return (
@@ -99,13 +86,12 @@ function RecipeReview() {
                                 <div className="d-flex flex-row justify-content-between flex-1">
                                     {!!recipe.id &&
                                         <>
-                                            <RecipeComment recipeId={recipe.id} onAddComment={onAddComment} />
-                                            <Like recipeId={recipe.id} />
+                                            <RecipeComment recipeId={recipe.id} onAddComment={onAction} />
+                                            <Like recipeId={recipe.id} onLikeAction={onAction}/>
                                         </>
                                     }
                                 </div>
                             </div>
-
                             {recipe?.comments?.map((comm, i) =>
                                 <div className="white-wrapper comment mb-4" key={i}>
                                     <h5 className="secondary-font secondary-font--contrast mb-2">{comm.username}</h5>

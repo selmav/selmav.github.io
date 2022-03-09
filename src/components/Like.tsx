@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { GetIsLiked, SetLikedRecipe } from "../models/Search.mock";
 
 
-function Like({ recipeId }: { recipeId: number }) {
+function Like({ recipeId, onLikeAction }: { recipeId: number, onLikeAction: Function }) {
     const [isLiked, setIsLiked] = useState(false);
 
     useEffect(() => {
@@ -13,6 +13,7 @@ function Like({ recipeId }: { recipeId: number }) {
     function onLike() {
         const isLiked = SetLikedRecipe(recipeId);
         setIsLiked(isLiked);
+        onLikeAction();
     }
 
     return (

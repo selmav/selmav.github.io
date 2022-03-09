@@ -73,7 +73,7 @@
     width: 1.6rem;
     height: 1.6rem;
     position: absolute;
-    bottom: 1.2rem;
+    bottom: calc((3.6rem - 1.6rem) / 2);
     right: 0.8rem;
     transition: all 0.2s ease-in-out;
 

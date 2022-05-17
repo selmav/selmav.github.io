@@ -6,19 +6,34 @@ import RecipeComment from "../components/RecipeComment";
 import SmallDetails from "../components/SmallDetails";
 import Step from "../components/Step";
 import { Recipe } from "../models/Recipe.model";
-import { selectIsLoggedIn, selectRecipeById, useAppSelector } from "../services/Store";
+import { selectCurrentUserId, selectIsLoggedIn, selectRecipeById, useAppSelector } from "../services/Store";
 import './RecipeReview.scss';
 
 function RecipeReview() {
     const params = useParams();
     const [recipe, setRecipe] = useState<Recipe>();
     const isLoggedIn = useAppSelector(({ user }) => selectIsLoggedIn(user));
-    
+    const currentUserId = selectCurrentUserId();
+    const [actions, setActions] = useState<JSX.Element | null>();
+    const el = <div className="actions-wrapper primary-font">
+        <p className="link">Uredi</p>
+        <p className="link">Obriši</p>
+    </div>;
+
+    useEffect(() => {
+        if (isLoggedIn && currentUserId === recipe?.userId) {
+            setActions(el);
+        } else {
+            setActions(null)
+        }
+    }, [isLoggedIn, recipe])
+
+
     useEffect(() => {
         setRecipe(selectRecipeById(Number(params.recipeId ?? 0)));
     }, []);
 
-    
+
     function onAction() {
         setRecipe(selectRecipeById(Number(params.recipeId ?? 0)))
     }
@@ -47,9 +62,13 @@ function RecipeReview() {
                         </ul>
                     </div>
 
-                    {recipe.imageUrl !== '' && <div className="col-md-6">
-                        <img src={recipe.imageUrl} className="recipe-image" alt="Slika recepta" />
-                    </div>}
+                    {recipe.imageUrl !== '' ?
+                        <div className="col-md-6">
+                            <img src={recipe.imageUrl} className="recipe-image" alt="Slika recepta" />
+                            {actions}
+                        </div> :
+                        <div className="col-md-3 mb-5">{actions}</div>
+                    }
                 </div>
 
                 {/* opis */}
@@ -85,14 +104,14 @@ function RecipeReview() {
                         <div className="col-md-12">
                             <div className="d-flex flex-row justify-content-between mb-4">
                                 {recipe?.comments?.length && <h5 className="secondary-font">KOMENTARI</h5>}
-                                <div className="d-flex flex-row justify-content-between flex-1">
+                                {isLoggedIn && <div className="d-flex flex-row justify-content-between flex-1">
                                     {!!recipe.id &&
                                         <>
                                             <RecipeComment recipeId={recipe.id} onAddComment={onAction} />
-                                            <Like recipeId={recipe.id} onLikeRecipe={onAction}/>
+                                            <Like recipeId={recipe.id} onLikeRecipe={onAction} />
                                         </>
                                     }
-                                </div>
+                                </div>}
                             </div>
                             {recipe?.comments?.map((comm, i) =>
                                 <div className="white-wrapper comment mb-4" key={i}>

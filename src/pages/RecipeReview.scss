@@ -15,6 +15,12 @@
         }
     }
 
+    .actions-wrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
     .small-details {
         background-color: $white;
         padding: 0.5rem 0.7rem;

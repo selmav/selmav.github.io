@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Header from "../components/Header";
+import { selectIsLoggedIn, useAppSelector } from "../services/Store";
 import './Layout.scss';
 
 type NavigationLink = {
@@ -22,7 +24,11 @@ function Layout() {
     ];
 
     const activatedRoute = location?.pathname;
-    const isLoggedIn = true;
+    const isLoggedIn = useAppSelector(({ user }) => selectIsLoggedIn(user));
+
+    // useEffect(() => {
+    //     setIsLoggedIn(selectIsLoggedIn());
+    // }, []);
 
     const linkElement = (link: NavigationLink, i: number) =>
         <>

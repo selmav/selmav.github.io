@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
-import { GetIsLiked, SetLikedRecipe } from "../models/Search.mock";
+import { likeRecipe, selectCurrentUserId, selectIsLiked, useAppDispatch } from "../services/Store";
 
 
-function Like({ recipeId, onLikeAction }: { recipeId: number, onLikeAction: Function }) {
+function Like({ recipeId, onLikeRecipe }: { recipeId: number, onLikeRecipe: Function }) {
     const [isLiked, setIsLiked] = useState(false);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
-        const isLiked = GetIsLiked(recipeId);
+        const userId = selectCurrentUserId();
+        const isLiked = selectIsLiked(userId, recipeId);
         setIsLiked(isLiked);
     }, []);
 
     function onLike() {
-        const isLiked = SetLikedRecipe(recipeId);
-        setIsLiked(isLiked);
-        onLikeAction();
+        const userId = selectCurrentUserId();
+        dispatch(likeRecipe({ userId, recipeId, like: isLiked ? -1 : 1 }));
+        setIsLiked(!isLiked);
+        onLikeRecipe();
     }
 
     return (

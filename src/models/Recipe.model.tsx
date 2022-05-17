@@ -13,6 +13,7 @@ export interface Recipe {
     advice?: string;
     comments?: UserComment[];
     category?: Category;
+    userId?: number;
 }
 
 export interface Step {
@@ -37,6 +38,13 @@ export enum Category {
 export interface Ingredient {
     id?: number;
     name: string;
+    category?: number; // 0 - main, 1 - vegetable, 2 - fruit
+}
+
+export interface RecipeIngredient {
+    ingredientId: number;
+    recipeId: number;
+    quantity?: string;
 }
 
 export type IngredientClasses = {
@@ -44,3 +52,5 @@ export type IngredientClasses = {
     vegetables?: Ingredient[];
     fruit?: Ingredient[];
 }
+
+

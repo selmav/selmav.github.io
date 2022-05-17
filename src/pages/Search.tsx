@@ -88,7 +88,7 @@ function Search({ ingredientSearch }: SearchProps) {
 
                 {(isSearched && !recipes.length) ?
                     <div className="no-results">
-                        <h3 className="primary-font" style={{ fontSize: '1.8rem' }}>Nema rezultata pretrage.</h3>
+                        <h3 className="primary-font" style={{ fontSize: '1.8rem', paddingTop: '2rem', paddingBottom: '2rem' }}>Nema rezultata pretrage.</h3>
                     </div> :
                     <div className="results-wrapper">
                         {recipes.map((r, i) =>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { UserComment } from "../models/Recipe.model";
-import { AddComment } from "../models/Search.mock";
+import { useAppDispatch, addComment } from "../services/Store";
 import Popup, { PopupProps } from "./Popup";
 
 type CommentForm = {
@@ -11,22 +11,23 @@ type CommentForm = {
 function RecipeComment({ recipeId, onAddComment }: { recipeId: number, onAddComment: Function }) {
     const [modalShow, setModalShow] = useState(false);
     const { register, getValues, setValue } = useForm<CommentForm>({ mode: 'onBlur', defaultValues: { comment: '' } });
+    const dispatch = useAppDispatch();
 
     const popupProps: PopupProps = {
         header: <h4 className="secondary-font secondary-font--contrast">Ostavi svoj komentar</h4>,
         body: (<textarea className="form-control" rows={4} style={{ height: 'auto' }} {...register('comment')} />),
-        footer: <button className="button-common" onClick={addComment}>Sačuvaj</button>
+        footer: <button className="button-common" onClick={addCommentFun}>Sačuvaj</button>
     }
 
-    function addComment() {
+    function addCommentFun() {
         const commentText = getValues().comment;
         if (!!commentText) {
             const comment: UserComment = {
                 username: 'vselma', // get current username
                 comment: commentText
             }
-            AddComment(comment, recipeId);
-            onAddComment(comment);
+            dispatch(addComment({ recipeId, comment }));
+            onAddComment();
             setValue('comment', '');
         }
         setModalShow(false);

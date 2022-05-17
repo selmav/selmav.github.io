@@ -1,24 +1,26 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router";
 import Like from "../components/Like";
 import RecipeComment from "../components/RecipeComment";
 import SmallDetails from "../components/SmallDetails";
 import Step from "../components/Step";
 import { Recipe } from "../models/Recipe.model";
-import { GetRecipeById } from "../models/Search.mock";
+import { selectIsLoggedIn, selectRecipeById, useAppSelector } from "../services/Store";
 import './RecipeReview.scss';
 
 function RecipeReview() {
     const params = useParams();
     const [recipe, setRecipe] = useState<Recipe>();
-    const isLoggedIn = true; // todo
-
+    const isLoggedIn = useAppSelector(({ user }) => selectIsLoggedIn(user));
+    
     useEffect(() => {
-        setRecipe(GetRecipeById(params.recipeId));
+        setRecipe(selectRecipeById(Number(params.recipeId ?? 0)));
     }, []);
 
+    
     function onAction() {
-        setRecipe({ ...recipe } as Recipe);
+        setRecipe(selectRecipeById(Number(params.recipeId ?? 0)))
     }
 
     return (
@@ -87,7 +89,7 @@ function RecipeReview() {
                                     {!!recipe.id &&
                                         <>
                                             <RecipeComment recipeId={recipe.id} onAddComment={onAction} />
-                                            <Like recipeId={recipe.id} onLikeAction={onAction}/>
+                                            <Like recipeId={recipe.id} onLikeRecipe={onAction}/>
                                         </>
                                     }
                                 </div>

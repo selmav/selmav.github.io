@@ -22,7 +22,6 @@ function RecipeList(props: RecipeListProps) {
         setRecipes(props.recipeListType === RecipeListType.my ? GetMyRecipes() : GetLikedRecipes());
     }, []);
 
-
     return (
         <div className="row h-100">
             <div className="col-md-10 offset-md-1 content-wrapper">

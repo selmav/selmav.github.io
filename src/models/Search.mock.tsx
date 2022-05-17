@@ -670,13 +670,9 @@ export function SetLikedRecipe(recipeId: number): boolean {
     return false;
 }
 
-export function GetIsLiked(recipeId: number) {
-    return likedRecipes.findIndex(r => r.id === recipeId) > -1;
-}
-
-export function GetRecipeById(id: string | undefined): Recipe | undefined {
-    return [...searchResults].find(r => r.id === Number(id ?? 0));
-}
+// export function GetRecipeById(id: string | undefined): Recipe | undefined {
+//     return [...searchResults].find(r => r.id === Number(id ?? 0));
+// }
 
 export function AddComment(comment: UserComment, recipeId: number) {
     let index = searchResults.findIndex(r => r.id === recipeId);

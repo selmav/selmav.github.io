@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
+import { User } from '../models/User.model';
+import { login, logout, selectIsLoggedIn, useAppDispatch, useAppSelector } from '../services/Store';
+import { ValidateUser } from '../services/User.service';
 import './Header.scss';
 import Popup, { PopupProps } from './Popup';
 
@@ -12,7 +16,10 @@ function Header() {
     const [modalShow, setModalShow] = useState(false);
     const [isLogin, setIsLogin] = useState(false);
     const [popupProps, setPopupProps] = useState<PopupProps>({});
-    const { register, formState: { touchedFields, errors }, reset } = useForm<LoginRequest>({ mode: 'onBlur' });
+    const { register, formState: { touchedFields, errors }, reset, getValues } = useForm<LoginRequest>({ mode: 'onBlur' });
+    const dispatch = useAppDispatch();
+    const isLoggedIn = useAppSelector(({ user }) => selectIsLoggedIn(user));
+    const navigate = useNavigate();
 
     useEffect(() => {
         const formValid = isLogin ?
@@ -21,6 +28,7 @@ function Header() {
         setProps(!!formValid);
     }, [isLogin, touchedFields?.username, touchedFields?.password, errors?.username, errors?.password]);
 
+    // LOGIN
     const loginHeader = <h3 className="secondary-font secondary-font--contrast">Prijava</h3>
 
     function loginBody() {
@@ -47,13 +55,31 @@ function Header() {
             <div className="modal-footer">
                 <button type="button" className="button-secondary" onClick={() => setModalShow(false)}>Otkaži</button>
                 <button type="button" className={`button-common ${!formValid ? 'button-common--disabled' : ''}`}
-                    onClick={() => setModalShow(false)} disabled={!formValid}>
+                    onClick={loginAction} disabled={!formValid}>
                     Prijavi se
                 </button>
             </div>
         );
     }
 
+    function loginAction() {
+        const user: User = {
+            username: getValues('username'),
+            password: getValues('password')
+        }
+
+        const response = ValidateUser(user);
+        if (response.status === 404) {
+            // show error
+        }
+        else {
+            dispatch(login(response.userId ?? 0))
+            setModalShow(false);
+            navigate('/main/search');
+        }
+    }
+
+    // REGISTRATION
     function registrationBody() {
         return (
             <p>registration</p>
@@ -77,14 +103,27 @@ function Header() {
         setPopupProps(props);
     }
 
+    function onLogout() {
+        dispatch(logout());
+        navigate('/');
+    }
+
     return (
         <>
-            <div className="header-text primary-font">
-                <h5 className="link" onClick={() => handlePopup()}>Prijava</h5>
-                <h5 className="link" onClick={() => handlePopup(false)}>Registracija</h5>
-            </div>
+            {isLoggedIn ?
+                <div className="header-text primary-font">
+                    <h5 className="link" onClick={onLogout}>Odjava</h5>
+                </div>
+                :
+                <>
+                    <div className="header-text primary-font">
+                        <h5 className="link" onClick={() => handlePopup()}>Prijava</h5>
+                        <h5 className="link" onClick={() => handlePopup(false)}>Registracija</h5>
+                    </div>
 
-            <Popup show={modalShow} onHide={() => setModalShow(false)} {...popupProps} />
+                    <Popup show={modalShow} onHide={() => setModalShow(false)} {...popupProps} />
+                </>
+            }
         </>
     );
 }

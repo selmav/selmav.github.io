@@ -7,6 +7,7 @@ import { AddMyRecipe } from "../services/Recipe.service";
 import { Form } from "react-bootstrap";
 import { toast, Slide } from "react-toastify";
 import { useNavigate } from "react-router";
+import { addRecipe, useAppDispatch } from "../services/Store";
 
 
 function AddRecipe() {
@@ -20,6 +21,7 @@ function AddRecipe() {
     const categoryList = Object.keys(Category).map(key => ({ value: key, name: (Category as any)[key] }));
 
     const errorMessage = 'Polje je obavezno.';
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         setDisabled();
@@ -72,7 +74,7 @@ function AddRecipe() {
     }
 
     function saveRecipe() {
-        const recipe: Recipe = {
+        let recipe: Recipe = {
             name: getValues('name'),
             time: getTime(),
             imageUrl: images[0]?.dataURL !== undefined ? images[0].dataURL : '',
@@ -86,7 +88,8 @@ function AddRecipe() {
             category: getValues('category') as Category
         }
 
-        AddMyRecipe(recipe);
+        recipe = AddMyRecipe(recipe);
+        dispatch(addRecipe(recipe));
         toast.success('Recept je sačuvan!', {
             position: "top-right",
             autoClose: 5000,

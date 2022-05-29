@@ -10,7 +10,7 @@ type CommentForm = {
 
 function RecipeComment({ recipeId, onAddComment }: { recipeId: number, onAddComment: Function }) {
     const [modalShow, setModalShow] = useState(false);
-    const { register, getValues, setValue } = useForm<CommentForm>({ mode: 'onBlur', defaultValues: { comment: '' } });
+    const { register, getValues, setValue } = useForm<CommentForm>({ mode: 'onChange', defaultValues: { comment: '' } });
     const dispatch = useAppDispatch();
 
     const popupProps: PopupProps = {

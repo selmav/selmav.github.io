@@ -20,7 +20,7 @@ function Search({ ingredientSearch }: SearchProps) {
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
     const [isSearchValid, setIsSearchValid] = useState(true);
-    const { register, formState: { errors, touchedFields }, getValues, setValue } = useForm<{ search: string }>({ mode: 'onBlur' });
+    const { register, formState: { errors, touchedFields }, getValues, setValue } = useForm<{ search: string }>({ mode: 'onChange' });
     const { state } = useLocation();
     const filters = Object.keys(Category).map(key => ({ value: key, name: (Category as any)[key] }));
 

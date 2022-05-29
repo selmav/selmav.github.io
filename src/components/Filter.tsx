@@ -12,7 +12,7 @@ interface FilterProps {
 
 function Filter(props: FilterProps) {
     const [isExpanded, setIsExpanded] = useState(false);
-    const { register, getValues } = useForm({ mode: 'onBlur' });
+    const { register, getValues } = useForm({ mode: 'onChange' });
     const ref = useRef<any>(null);
 
     function handleClick(event: MouseEvent) {

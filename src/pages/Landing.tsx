@@ -9,7 +9,7 @@ import './Landing.scss'
 
 function Landing() {
     const [popular, setPopular] = useState<Recipe[]>([]);
-    const { register, getValues } = useForm({ mode: 'onBlur' });
+    const { register, getValues } = useForm({ mode: 'onChange' });
     const navigate = useNavigate();
 
     // todo: redux?

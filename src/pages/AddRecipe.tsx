@@ -11,7 +11,7 @@ import { addRecipe, useAppDispatch } from "../services/Store";
 
 
 function AddRecipe() {
-    const { register, formState: { errors, touchedFields }, watch, getValues, setValue } = useForm({ mode: 'onBlur' });
+    const { register, formState: { errors, touchedFields }, watch, getValues, setValue } = useForm({ mode: 'onChange' });
     const navigate = useNavigate();
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [steps, setSteps] = useState<Step[]>([]);

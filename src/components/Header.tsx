@@ -19,7 +19,7 @@ function Header() {
     const [modalShow, setModalShow] = useState(false);
     const [isLogin, setIsLogin] = useState(false);
     const [popupProps, setPopupProps] = useState<PopupProps>({});
-    const { register, formState: { touchedFields, errors }, reset, getValues } = useForm<LoginRequest>({ mode: 'onBlur' });
+    const { register, formState: { touchedFields, errors }, reset, getValues } = useForm<LoginRequest>({ mode: 'onChange' });
     const dispatch = useAppDispatch();
     const isLoggedIn = useAppSelector(({ user }) => selectIsLoggedIn(user));
     const navigate = useNavigate();

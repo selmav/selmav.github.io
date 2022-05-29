@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { Navigate, Route, Routes, useParams } from 'react-router';
+import { ToastContainer } from 'react-toastify';
 import './App.scss';
 import AddRecipe from './pages/AddRecipe';
 import Landing from './pages/Landing';
@@ -20,6 +21,7 @@ function App() {
   useEffect(() => { document.title = 'e-recepteka'; }, []);
   return (
     <Provider store={store}>
+      <ToastContainer />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="main" element={<Layout />}>

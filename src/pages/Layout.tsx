@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router";
 import { Link } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import Header from "../components/Header";
 import { selectIsLoggedIn, useAppSelector } from "../services/Store";
 import './Layout.scss';
@@ -42,7 +40,6 @@ function Layout() {
 
     return (
         <div className="container-fluid">
-            <ToastContainer />
             <div className="row row-content">
                 <div className="col-md-3 navigation">
                     <div className="links">

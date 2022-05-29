@@ -12,8 +12,14 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+}
 
+.h-250 {
     height: 250px;
+}
+
+.h-400 {
+    height: 320px;
 }
 
 .modal-form-row {

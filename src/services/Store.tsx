@@ -35,11 +35,12 @@ export const userSlice = createSlice({
             }
         },
         login: (state: UserState, { payload }: PayloadAction<number>) => ({ ...state, currentUserId: payload }),
-        logout: (state: UserState) => ({ ...state, currentUserId: undefined })
+        logout: (state: UserState) => ({ ...state, currentUserId: undefined }),
+        registration: (state: UserState, { payload }: PayloadAction<User>) => ({ ...state, allUsers: [...state.allUsers, { ...payload, userId: state.allUsers.length }] })
     }
 })
 
-export const { likeRecipe, login, logout } = userSlice.actions
+export const { likeRecipe, login, logout, registration } = userSlice.actions
 
 // RECIPE STORE SLICE
 

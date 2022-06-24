@@ -13,20 +13,20 @@ function RecipeReview() {
     const params = useParams();
     const [recipe, setRecipe] = useState<Recipe>();
     const isLoggedIn = useAppSelector(({ user }) => selectIsLoggedIn(user));
-    const currentUserId = selectCurrentUserId();
-    const [actions, setActions] = useState<JSX.Element | null>();
-    const el = <div className="actions-wrapper primary-font">
-        <p className="link">Uredi</p>
-        <p className="link">Obriši</p>
-    </div>;
+    // const currentUserId = selectCurrentUserId();
+    // const [actions, setActions] = useState<JSX.Element | null>();
+    // const el = <div className="actions-wrapper primary-font">
+    //     <p className="link">Uredi</p>
+    //     <p className="link">Obriši</p>
+    // </div>;
 
-    useEffect(() => {
-        if (isLoggedIn && currentUserId === recipe?.userId) {
-            setActions(el);
-        } else {
-            setActions(null)
-        }
-    }, [isLoggedIn, recipe])
+    // useEffect(() => {
+    //     if (isLoggedIn && currentUserId === recipe?.userId) {
+    //         setActions(el);
+    //     } else {
+    //         setActions(null)
+    //     }
+    // }, [isLoggedIn, recipe])
 
 
     useEffect(() => {
@@ -62,12 +62,11 @@ function RecipeReview() {
                         </ul>
                     </div>
 
-                    {recipe.imageUrl !== '' ?
-                        <div className="col-md-6">
+                    {recipe.imageUrl !== '' &&
+                        <div className="col-md-6 mb-4" style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <img src={recipe.imageUrl} className="recipe-image" alt="Slika recepta" />
-                            {actions}
-                        </div> :
-                        <div className="col-md-3 mb-5">{actions}</div>
+                            {/* {actions} */}
+                        </div>
                     }
                 </div>
 

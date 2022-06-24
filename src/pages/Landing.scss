@@ -90,8 +90,9 @@
 .cards-wrapper {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     flex-wrap: wrap;
+    gap: 2rem;
 
     @include mobile() {
         justify-content: center;

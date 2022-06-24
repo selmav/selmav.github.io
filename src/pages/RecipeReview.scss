@@ -42,6 +42,8 @@
     }
 
     .recipe-image {
+        max-height: 25rem;
+        object-fit: cover;
         width: 100%;
         border-radius: 2rem;
     }

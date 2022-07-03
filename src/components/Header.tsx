@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { toast, Slide, ToastOptions } from "react-toastify";
 import { User } from '../models/User.model';
@@ -9,20 +8,28 @@ import './Header.scss';
 import InfoTooltip from './InfoTooltip';
 import Popup, { PopupProps } from './Popup';
 
-interface LoginRequest {
-    username: string;
-    password: string;
-    email?: string;
-}
-
 function Header() {
     const [modalShow, setModalShow] = useState(false);
     const [isLogin, setIsLogin] = useState(false);
     const [popupProps, setPopupProps] = useState<PopupProps>({});
-    const { register, formState: { touchedFields, errors }, reset, getValues } = useForm<LoginRequest>({ mode: 'onChange' });
     const dispatch = useAppDispatch();
     const isLoggedIn = useAppSelector(({ user }) => selectIsLoggedIn(user));
     const navigate = useNavigate();
+    const [values, setValues] = useState<{ name: string, value: string }[]>([]);
+    const [errorsArray, setErrorsArray] = useState<{ name: string, error: string }[]>([]);
+    const [touchedFields, setTouchedFields] = useState<{ [key: string]: boolean }>({});
+    const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
+    const [isValid, setIsValid] = useState<boolean>(false);
+
+    useEffect(() => {
+        const tf = values?.reduce((a, b) => ({ ...a, [b.name]: true }), {})
+        setTouchedFields(tf);
+
+        const errs = errorsArray?.reduce((a, b) => ({ ...a, [b.name]: b.error }), {});
+        setErrors(errs);
+
+        setProps(isValid);
+    }, [isLogin, values?.length, errors?.length]);
 
     useEffect(() => {
         const nameAndPw = ((touchedFields?.username && !errors?.username) && (touchedFields?.password && !errors?.password));
@@ -30,19 +37,22 @@ function Header() {
             nameAndPw :
             (nameAndPw && (touchedFields?.email && !errors?.email));
         setProps(!!formValid);
-    }, [isLogin, touchedFields?.username, touchedFields?.password, touchedFields?.email, errors?.username, errors?.password, errors?.email]);
+        setIsValid(!!formValid);
+    }, [touchedFields?.username, touchedFields?.password, touchedFields?.email, errors?.username, errors?.password, errors?.email]);
 
+    useEffect(() => {
+        setProps(isValid);
+    }, [isValid])
     const getHeader = (isLogin: boolean) => <h3 className="secondary-font secondary-font--contrast">{isLogin ? 'Prijava' : 'Registracija'}</h3>
     const validation = 'Polje je obavezno.';
     const validationFormat = 'Neispravan format polja.';
-    const usernameRegex = new RegExp('^[A-Za-z0-9\.\-_]+$');
     const usernameMessage = 'Korisničko ime se može sastojati od slova, brojeva i znakova . _ -';
     const emailMessage = 'E-mail adresa se može sastojati od slova, brojeva i znakova - . _ @'
 
     function submitAction(isRegistration: boolean = false) {
         const user: User = {
-            username: getValues('username'),
-            password: getValues('password')
+            username: (document.getElementById('username') as HTMLInputElement)?.value,
+            password: (document.getElementById('password') as HTMLInputElement)?.value
         }
 
         const toastConfig = {
@@ -70,13 +80,34 @@ function Header() {
         else if (isRegistration) {
             toast.error('Korisnik već postoji.', toastConfig as ToastOptions);
         }
-        else if(response.status === 200) {
+        else if (response.status === 200) {
             dispatch(login(response.userId ?? 0))
             setModalShow(false);
             navigate('/main/search');
         } else {
             toast.error('Pogrešni pristupni podaci.', toastConfig as ToastOptions);
         }
+    }
+
+    function onChange(name: string) {
+        const field = (document.getElementById(name) as HTMLInputElement);
+        const value = field?.value;
+        setValues([...values, { name, value }]);
+        invalidMsg(field);
+    }
+
+    function invalidMsg(field: HTMLInputElement) {
+        console.log({ required: field?.validity.valueMissing });
+        console.log({ pattern: field?.validity.patternMismatch });
+
+        let msg = '';
+        if (field?.validity.valueMissing) {
+            msg = validation;
+        } else if (field?.validity.patternMismatch) {
+            msg = validationFormat;
+        }
+
+        setErrorsArray([...errorsArray, { name: field.name, error: msg }]);
     }
 
     // LOGIN
@@ -89,16 +120,19 @@ function Header() {
                     <h5 className="secondary-font secondary-font--contrast d-inline-block">Korisničko ime</h5>
                     <InfoTooltip message={usernameMessage} />
                 </div>
-                <input {...register('username', { required: true })} className="form-control" type="text" placeholder='Korisničko ime' />
+                <input id="username" name="username" type="text" className="form-control" placeholder='Korisničko ime' required pattern='^([a-zA-Z0-9]+[\.\-_]*)+$'
+                    onChange={() => onChange('username')} onBlur={() => onChange('username')}
+                />
                 {touchedFields?.username && errors?.username &&
-                    <p className="primary-font primary-font--error">{validation}</p>}
+                    <p className="primary-font primary-font--error">{errors?.username}</p>}
             </div>
 
             <div className="modal-form-row">
                 <h5 className="secondary-font secondary-font--contrast">Lozinka</h5>
-                <input {...register('password', { required: true })} className="form-control" type="password" placeholder='Lozinka' />
+                <input id="password" name="password" type="password" className='form-control' placeholder='Lozinka' required
+                    onChange={() => onChange('password')} onBlur={() => onChange('password')} />
                 {touchedFields?.password && errors?.password &&
-                    <p className="primary-font primary-font--error">{validation}</p>}
+                    <p className="primary-font primary-font--error">{errors?.password}</p>}
             </div>
         </form>);
     }
@@ -124,18 +158,20 @@ function Header() {
                         <h5 className="secondary-font secondary-font--contrast d-inline-block">Korisničko ime</h5>
                         <InfoTooltip message={usernameMessage} />
                     </div>
-                    <input {...register('username', { required: true, pattern: usernameRegex })} className="form-control" type="text" placeholder='Korisničko ime' />
+                    <input id="username" name="username" type="text" className="form-control" placeholder='Korisničko ime' required pattern='^([a-zA-Z0-9]+[\.\-_]*)+$'
+                        onChange={() => onChange('username')} onBlur={() => onChange('username')} />
                     {touchedFields?.username && errors?.username &&
                         <p className="primary-font primary-font--error">{
-                            errors.username.type === 'pattern' ? validationFormat : validation
+                            errors.username
                         }</p>}
                 </div>
 
                 <div className="modal-form-row">
                     <h5 className="secondary-font secondary-font--contrast">Lozinka</h5>
-                    <input {...register('password', { required: true })} className="form-control" type="password" placeholder='Lozinka' />
+                    <input id="password" name="password" type="password" className='form-control' placeholder='Lozinka' required
+                        onChange={() => onChange('password')} onBlur={() => onChange('password')} />
                     {touchedFields?.password && errors?.password &&
-                        <p className="primary-font primary-font--error">{validation}</p>}
+                        <p className="primary-font primary-font--error">{errors?.password}</p>}
                 </div>
 
                 <div className="modal-form-row">
@@ -143,11 +179,10 @@ function Header() {
                         <h5 className="secondary-font secondary-font--contrast d-inline-block">E-mail adresa</h5>
                         <InfoTooltip message={emailMessage} />
                     </div>
-                    <input {...register('email', { required: true, pattern: new RegExp('^[A-Za-z0-9\-\._]+@[A-Za-z0-9\-\._]+$') })} className="form-control" type="email" placeholder='E-mail adresa' />
+                    <input id="email" name="email" required pattern='^[A-Za-z0-9\-\._]+@[A-Za-z0-9\-\._]+$' className="form-control" type="email" placeholder='E-mail adresa'
+                        onChange={() => onChange('email')} onBlur={() => onChange('email')} />
                     {touchedFields?.email && errors?.email &&
-                        <p className="primary-font primary-font--error">{
-                            errors.email.type === 'pattern' ? validationFormat : validation
-                        }</p>}
+                        <p className="primary-font primary-font--error">{errors?.email}</p>}
                 </div>
             </form>
         )
@@ -165,16 +200,11 @@ function Header() {
         );
     }
 
-    function registrationAction() {
-        const user: User = {
-            username: getValues('username'),
-            password: getValues('password')
-        }
-    }
-
     function handlePopup(isLogin: boolean = true) {
-        reset();
         setIsLogin(isLogin);
+        setValues([]);
+        setErrorsArray([]);
+        setIsValid(false);
         setModalShow(true);
     }
 
@@ -211,7 +241,9 @@ function Header() {
                         <h5 className="link" onClick={() => handlePopup(false)}>Registracija</h5>
                     </div>
 
-                    <Popup show={modalShow} onHide={() => setModalShow(false)} {...popupProps} />
+                    <Popup show={modalShow} onHide={() => {
+                        setModalShow(false);
+                    }} {...popupProps} />
                 </>
             }
         </>

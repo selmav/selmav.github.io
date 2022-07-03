@@ -132,7 +132,7 @@ function Header() {
                     <h5 className="secondary-font secondary-font--contrast d-inline-block">Korisničko ime</h5>
                     <InfoTooltip message={usernameMessage} />
                 </div>
-                <input id="username" name="username" type="text" className="form-control" placeholder='Korisničko ime' required pattern='^([a-zA-Z0-9]+[\.\-_]*)+$'
+                <input id="username" name="username" type="text" className="form-control" placeholder='Korisničko ime' required pattern='^([\p{L}0-9]+[\.\-_]*)+$'
                     onChange={() => onChange('username')} onBlur={() => onChange('username')}
                 />
                 {touchedFields?.username && errors?.username &&
@@ -170,7 +170,7 @@ function Header() {
                         <h5 className="secondary-font secondary-font--contrast d-inline-block">Korisničko ime</h5>
                         <InfoTooltip message={usernameMessage} />
                     </div>
-                    <input id="username" name="username" type="text" className="form-control" placeholder='Korisničko ime' required pattern='^([a-zA-Z0-9]+[\.\-_]*)+$'
+                    <input id="username" name="username" type="text" className="form-control" placeholder='Korisničko ime' required pattern='^([\p{L}0-9]+[\.\-_]*)+$'
                         onChange={() => onChange('username')} onBlur={() => onChange('username')} />
                     {touchedFields?.username && errors?.username &&
                         <p className="primary-font primary-font--error">{

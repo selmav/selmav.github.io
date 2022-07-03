@@ -21,6 +21,15 @@ function Header() {
     const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
     const [isValid, setIsValid] = useState<boolean>(false);
 
+    // submit on enter
+    function keyPress(e: any) {
+        var x = e || window.event;
+        var key = (x.keyCode || x.which);
+        if (isValid && (key == 13 || key == 3)) {
+            submitAction(!isLogin);
+        }
+    }
+
     useEffect(() => {
         const tf = values?.reduce((a, b) => ({ ...a, [b.name]: true }), {})
         setTouchedFields(tf);
@@ -41,8 +50,13 @@ function Header() {
     }, [touchedFields?.username, touchedFields?.password, touchedFields?.email, errors?.username, errors?.password, errors?.email]);
 
     useEffect(() => {
+        document.onkeydown = modalShow ? keyPress : () => { };
+    }, [isValid, isLogin, modalShow]);
+
+    useEffect(() => {
         setProps(isValid);
     }, [isValid])
+
     const getHeader = (isLogin: boolean) => <h3 className="secondary-font secondary-font--contrast">{isLogin ? 'Prijava' : 'Registracija'}</h3>
     const validation = 'Polje je obavezno.';
     const validationFormat = 'Neispravan format polja.';
@@ -67,12 +81,13 @@ function Header() {
             transition: Slide
         };
 
+        toast.dismiss();
         const response = ValidateUser(user);
         if (response.status === 404) {
             if (isRegistration) {
                 dispatch(registration(user));
                 setModalShow(false);
-                toast.success('Uspješna registracija!', toastConfig as ToastOptions);
+                toast.success('Uspješna registracija! Molimo prijavite se.', toastConfig as ToastOptions);
             } else {
                 toast.error('Pogrešni pristupni podaci.', toastConfig as ToastOptions);
             }
@@ -97,9 +112,6 @@ function Header() {
     }
 
     function invalidMsg(field: HTMLInputElement) {
-        console.log({ required: field?.validity.valueMissing });
-        console.log({ pattern: field?.validity.patternMismatch });
-
         let msg = '';
         if (field?.validity.valueMissing) {
             msg = validation;
@@ -114,7 +126,7 @@ function Header() {
 
     function loginBody() {
         // todo: move this to separate component (LoginForm)?
-        return (<form className="modal-form h-250">
+        return (<form className="modal-form h-250" onSubmit={() => submitAction()} name="userForm">
             <div className="modal-form-row">
                 <div>
                     <h5 className="secondary-font secondary-font--contrast d-inline-block">Korisničko ime</h5>
@@ -141,7 +153,7 @@ function Header() {
         return (
             <div className="modal-footer">
                 <button type="button" className="button-secondary" onClick={() => setModalShow(false)}>Otkaži</button>
-                <button type="button" className={`button-common ${!formValid ? 'button-common--disabled' : ''}`}
+                <button type="submit" className={`button-common ${!formValid ? 'button-common--disabled' : ''}`}
                     onClick={() => submitAction()} disabled={!formValid}>
                     Prijavi se
                 </button>

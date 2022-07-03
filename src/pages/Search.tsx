@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useLocation } from 'react-router-dom';
 import Card from '../components/Card';
 import Filter from '../components/Filter';
 import IngredientAccordions from '../components/IngredientAccordions';
 import { Category, Recipe } from '../models/Recipe.model';
 import { SearchByIngredients, SearchRecipes } from '../services/Recipe.service';
+import { selectSearchTerm, setSearch, useAppDispatch } from '../services/Store';
 import './Search.scss';
 
 // todo: redux - preserve search state
@@ -15,14 +15,17 @@ interface SearchProps {
 }
 
 function Search({ ingredientSearch }: SearchProps) {
+    const dispatch = useAppDispatch();
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [isSearched, setIsSearched] = useState(false);
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
     const [isSearchValid, setIsSearchValid] = useState(true);
-    const { register, formState: { errors, touchedFields }, getValues, setValue } = useForm<{ search: string }>({ mode: 'onChange' });
-    const { state } = useLocation();
+    const { register, getValues, setValue } = useForm<{ search: string }>({ mode: 'onChange' });
     const filters = Object.keys(Category).map(key => ({ value: key, name: (Category as any)[key] }));
+    const [values, setValues] = useState<{ name: string, value: string }[]>([]);
+    const [touchedFields, setTouchedFields] = useState<{ [key: string]: boolean }>({});
+    const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
 
     const filtersAndButtonElement = <>
         <Filter getValues={(values: string[]) => setSelectedFilters(values)} filters={filters} isLeft={ingredientSearch} />
@@ -35,9 +38,23 @@ function Search({ ingredientSearch }: SearchProps) {
         }
     </>
 
+    // submit on enter
+    function keyPress(e: any) {
+        var x = e || window.event;
+        var key = (x.keyCode || x.which);
+        if (isSearchValid && (key == 13 || key == 3)) {
+            onSearch();
+        }
+    }
+
     useEffect(() => {
-        if (state) {
-            setValue('search', state as string, { shouldTouch: true });
+        document.onkeydown = keyPress;
+    }, [isSearchValid, selectedFilters])
+
+    useEffect(() => {
+        const searchTerm = selectSearchTerm();
+        if (!!searchTerm) {
+            setValue('search', searchTerm, { shouldTouch: true });
             onSearch();
         }
     }, []);
@@ -46,14 +63,29 @@ function Search({ ingredientSearch }: SearchProps) {
         setIsSearchValid((!!touchedFields.search && !errors.search) || selectedFilters.length > 0);
     }, [touchedFields, errors.search, selectedFilters]);
 
+    useEffect(() => {
+        const tf = values?.reduce((a, b) => ({ ...a, [b.name]: true }), {})
+        setTouchedFields(tf);
+    }, [values.length])
+
     function onSearch() {
         setIsSearched(true);
-        setRecipes(SearchRecipes(getValues('search'), selectedFilters.map(f => (Category as any)[f])));
+        const value = getValues('search');
+        dispatch(setSearch({ search: value }));
+        setRecipes(SearchRecipes(value, selectedFilters.map(f => (Category as any)[f])));
     }
 
     function onIngredientSearch() {
         setIsSearched(true);
         setRecipes(SearchByIngredients(selectedIngredients.map(Number), selectedFilters.map(f => (Category as any)[f])));
+    }
+
+    function onChange() {
+        const value = getValues('search');
+        setValues([...values, { name: 'search', value }]);
+        const valid = (document.getElementById('searchInput') as HTMLInputElement).checkValidity();
+        console.log({ valid });
+        setErrors({ search: !valid });
     }
 
     return (
@@ -68,8 +100,8 @@ function Search({ ingredientSearch }: SearchProps) {
                             <IngredientAccordions selectClasses={(values: string[]) => setSelectedIngredients(values)} />
                             :
                             <div style={{ position: 'relative', flexGrow: 1 }}>
-                                <input type="text" className='form-control' placeholder='Unesite pojam pretrage...'
-                                    {...register('search', { required: true })} />
+                                <input id="searchInput" type="text" className='form-control' placeholder='Unesite pojam pretrage...'
+                                    {...register('search', { required: true })} onChange={onChange} required />
                                 <img className="i-search" src="/search.png" />
                             </div>
                         }

@@ -45,10 +45,12 @@ export const { likeRecipe, login, logout, registration } = userSlice.actions
 // RECIPE STORE SLICE
 
 interface RecipeState {
-    allRecipes: Recipe[]
+    allRecipes: Recipe[],
+    search: string,
 }
 const initialState: RecipeState = {
-    allRecipes: searchResults
+    allRecipes: searchResults,
+    search: '',
 }
 
 export const recipeSlice = createSlice({
@@ -63,7 +65,11 @@ export const recipeSlice = createSlice({
                 ...state,
                 allRecipes: state.allRecipes.map(r => r.id === recipeId ? { ...r, comments: [...(r.comments || []), comment] } : r)
             }
-        }
+        },
+        setSearch: (state: RecipeState, { payload: { search } }: PayloadAction<{ search: string }>) => ({
+            ...state,
+            search
+        }),
     },
     extraReducers: (builder) => {
         builder.addCase(likeRecipe, (state, { payload: { recipeId, like } }) => ({
@@ -73,7 +79,7 @@ export const recipeSlice = createSlice({
     }
 })
 
-export const { addRecipe, addComment } = recipeSlice.actions
+export const { addRecipe, addComment, setSearch } = recipeSlice.actions
 
 // APP STORE
 
@@ -104,6 +110,7 @@ export const selectIsLoggedIn = (state: UserState) => {
     const userId = state.currentUserId;
     return !!userId && userId > 0;
 };
+export const selectCurrentUsername = () => selectAllUsers().find(u => u.userId === selectCurrentUserId())?.username || '';
 
 // RECIPE SELECTORS
 export const selectAllRecipes = () => [...getState()?.recipes?.allRecipes];
@@ -126,3 +133,4 @@ export const selectRecipesByIds = (recipeIds: number[]) => {
     const allRecipes = selectAllRecipes();
     return allRecipes.filter(r => recipeIds.includes(r.id ?? 0));
 }
+export const selectSearchTerm = () => getState().recipes.search ?? '';

@@ -5,12 +5,14 @@ import Header from '../components/Header';
 import PopularCard from '../components/PopularCard';
 import { Recipe } from '../models/Recipe.model';
 import { GetPopular } from '../services/Recipe.service';
+import { setSearch, useAppDispatch } from '../services/Store';
 import './Landing.scss'
 
 function Landing() {
     const [popular, setPopular] = useState<Recipe[]>([]);
     const { register, getValues } = useForm({ mode: 'onChange' });
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     // todo: redux?
     useEffect(() => {
@@ -21,7 +23,8 @@ function Landing() {
 
     function onSearch() {
         // todo: redux?
-        navigate('/main/search', { state: getValues('search') });
+        dispatch(setSearch({ search: getValues('search') }));
+        navigate('/main/search');
     }
 
     return (

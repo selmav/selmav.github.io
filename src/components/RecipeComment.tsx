@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { UserComment } from "../models/Recipe.model";
-import { useAppDispatch, addComment } from "../services/Store";
+import { useAppDispatch, addComment, selectCurrentUsername } from "../services/Store";
 import Popup, { PopupProps } from "./Popup";
 
 type CommentForm = {
@@ -23,7 +23,7 @@ function RecipeComment({ recipeId, onAddComment }: { recipeId: number, onAddComm
         const commentText = getValues().comment;
         if (!!commentText) {
             const comment: UserComment = {
-                username: 'vselma', // get current username
+                username: selectCurrentUsername(), // get current username
                 comment: commentText
             }
             dispatch(addComment({ recipeId, comment }));

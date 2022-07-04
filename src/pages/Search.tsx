@@ -5,7 +5,7 @@ import Filter from '../components/Filter';
 import IngredientAccordions from '../components/IngredientAccordions';
 import { Category, Recipe } from '../models/Recipe.model';
 import { SearchByIngredients, SearchRecipes } from '../services/Recipe.service';
-import { selectSearchTerm, setSearch, useAppDispatch } from '../services/Store';
+import { selectAllRecipes, selectSearchTerm, setSearch, useAppDispatch } from '../services/Store';
 import './Search.scss';
 
 // todo: redux - preserve search state
@@ -20,59 +20,48 @@ function Search({ ingredientSearch }: SearchProps) {
     const [isSearched, setIsSearched] = useState(false);
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
-    const [isSearchValid, setIsSearchValid] = useState(true);
-    const { register, getValues, setValue } = useForm<{ search: string }>({ mode: 'onChange' });
+    const { register, setValue } = useForm<{ search: string }>({ mode: 'onChange' });
     const filters = Object.keys(Category).map(key => ({ value: key, name: (Category as any)[key] }));
     const [values, setValues] = useState<{ name: string, value: string }[]>([]);
-    const [touchedFields, setTouchedFields] = useState<{ [key: string]: boolean }>({});
-    const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
 
     const filtersAndButtonElement = <>
         <Filter getValues={(values: string[]) => setSelectedFilters(values)} filters={filters} isLeft={ingredientSearch} />
-        {
-            ingredientSearch ?
-                <button type="button" className={`button-common ${selectedFilters.length || selectedIngredients.length ? '' : 'button-common--disabled'}`}
-                    disabled={!selectedFilters.length && !selectedIngredients.length} onClick={onIngredientSearch}>Pretraži</button>
-                : <button type="button" className={`button-common ${isSearchValid ? '' : 'button-common--disabled'}`}
-                    disabled={!isSearchValid} onClick={onSearch}>Pretraži</button>
-        }
+        <button type="button" className="button-common" onClick={() => ingredientSearch ? onIngredientSearch() : onSearch()}>Pretraži</button>
     </>
 
     // submit on enter
     function keyPress(e: any) {
         var x = e || window.event;
         var key = (x.keyCode || x.which);
-        if (isSearchValid && (key == 13 || key == 3)) {
+        if (key == 13 || key == 3) {
             onSearch();
         }
     }
 
     useEffect(() => {
         document.onkeydown = keyPress;
-    }, [isSearchValid, selectedFilters])
+    }, [selectedFilters.length])
 
     useEffect(() => {
         const searchTerm = selectSearchTerm();
         if (!!searchTerm) {
             setValue('search', searchTerm, { shouldTouch: true });
             onSearch();
+        } else {
+            fetchAll();
         }
     }, []);
 
-    useEffect(() => {
-        setIsSearchValid((!!touchedFields.search && !errors.search) || selectedFilters.length > 0);
-    }, [touchedFields, errors.search, selectedFilters]);
-
-    useEffect(() => {
-        const tf = values?.reduce((a, b) => ({ ...a, [b.name]: true }), {})
-        setTouchedFields(tf);
-    }, [values.length])
-
     function onSearch() {
         setIsSearched(true);
-        const value = getValues('search');
+        const value = (document.getElementById('searchInput') as HTMLInputElement).value;
         dispatch(setSearch({ search: value }));
         setRecipes(SearchRecipes(value, selectedFilters.map(f => (Category as any)[f])));
+    }
+
+    function fetchAll() {
+        setIsSearched(true);
+        setRecipes(selectAllRecipes());
     }
 
     function onIngredientSearch() {
@@ -81,11 +70,8 @@ function Search({ ingredientSearch }: SearchProps) {
     }
 
     function onChange() {
-        const value = getValues('search');
+        const value = (document.getElementById('searchInput') as HTMLInputElement).value;
         setValues([...values, { name: 'search', value }]);
-        const valid = (document.getElementById('searchInput') as HTMLInputElement).checkValidity();
-        console.log({ valid });
-        setErrors({ search: !valid });
     }
 
     return (
@@ -110,12 +96,6 @@ function Search({ ingredientSearch }: SearchProps) {
                             <div className="ingredient-wrapper">{filtersAndButtonElement}</div>
                             : filtersAndButtonElement}
                     </div>
-                    {
-                        touchedFields?.search && !isSearchValid &&
-                        <p className="primary-font primary-font--error">
-                            Molimo unesite pojam pretrage ili odaberite kategoriju jela.
-                        </p>
-                    }
                 </div>
 
                 {(isSearched && !recipes.length) ?

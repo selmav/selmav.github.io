@@ -112,7 +112,7 @@ function RecipeReview() {
                                     }
                                 </div>}
                             </div>
-                            {recipe?.comments?.map((comm, i) =>
+                            {[...(recipe?.comments ?? [])].reverse().map((comm, i) =>
                                 <div className="white-wrapper comment mb-4" key={i}>
                                     <h5 className="secondary-font secondary-font--contrast mb-2">{comm.username}</h5>
                                     <p className="secondary-font secondary-font--contrast">{comm.comment}</p>

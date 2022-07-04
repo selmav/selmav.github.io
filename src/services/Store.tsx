@@ -36,7 +36,7 @@ export const userSlice = createSlice({
         },
         login: (state: UserState, { payload }: PayloadAction<number>) => ({ ...state, currentUserId: payload }),
         logout: (state: UserState) => ({ ...state, currentUserId: undefined }),
-        registration: (state: UserState, { payload }: PayloadAction<User>) => ({ ...state, allUsers: [...state.allUsers, { ...payload, userId: state.allUsers.length }] })
+        registration: (state: UserState, { payload }: PayloadAction<User>) => ({ ...state, allUsers: [...state.allUsers, { ...payload, userId: state.allUsers.length+1 }] })
     }
 })
 
